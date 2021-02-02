@@ -1,0 +1,44 @@
+services:
+  backend:
+    container_name: backend
+    build:
+      context: ./server
+    ports:
+      - 5000:5000
+    env_file:
+      - ./server/.env
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ./client
+      args:
+        - API_ENDPOINT=http://domain.tld/go
+    ports:
+      - 3000:80
+    networks:
+      - app-network
+    restart: unless-stopped
+    depends_on:
+      - backend
+
+  web-server:
+    container_name: web-server
+    image: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+    networks:
+      - app-network
+    restart: unless-stopped
+    depends_on:
+      - backend
+      - frontend
+
+networks:
+  app-network:
+    name: app-network
