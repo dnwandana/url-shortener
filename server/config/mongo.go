@@ -15,13 +15,13 @@ func DatabaseConnection() (*mongo.Database, error) {
 	defer cancel()
 
 	minPoolSize, err := strconv.Atoi(Env("MONGO_MIN_POOL"))
-	utils.Log("=> minPoolSize error: ", err)
+	utils.LogIfError("=> minPoolSize error: ", err)
 
 	maxPoolSize, err := strconv.Atoi(Env("MONGO_MAX_POOL"))
-	utils.Log("=> maxPoolSize error: ", err)
+	utils.LogIfError("=> maxPoolSize error: ", err)
 
 	maxConnIdle, err := strconv.Atoi(Env("MONGO_MAX_CONN_IDLE"))
-	utils.Log("=> maxConnIdle error: ", err)
+	utils.LogIfError("=> maxConnIdle error: ", err)
 
 	clientOption := options.Client().
 		ApplyURI(Env("MONGO_URI")).
