@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/dnwandana/url-shortener/config"
@@ -13,21 +12,23 @@ import (
 )
 
 func main() {
-	db, err := config.DatabaseConnection()
-	if err != nil {
-		log.Fatal("Database connection error: $s", err)
-	}
-	fmt.Println("Connected to the database.")
+	db, _ := config.DatabaseConnection()
 
 	// TODO: using env value
 	urlCollection := db.Collection("urls")
 	urlRepo := repository.NewUrlRepository(urlCollection)
 	urlService := services.NewUrlService(urlRepo)
 
+	// TODO: using env value
+	userCollection := db.Collection("users")
+	userRepo := repository.NewUserRepository(userCollection)
+	userService := services.NewUserService(userRepo)
+
 	app := fiber.New()
 	app.Use(cors.New())
 
 	apiRoute := app.Group("/go")
+	routes.UserRoutes(apiRoute, userService)
 	routes.UrlRoutes(apiRoute, urlService)
 
 	// TODO: using env value
