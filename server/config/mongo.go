@@ -2,10 +2,10 @@ package config
 
 import (
 	"context"
+	"log"
 	"strconv"
 	"time"
 
-	"github.com/dnwandana/url-shortener/utils"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -14,14 +14,20 @@ func DatabaseConnection() (*mongo.Database, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	minPoolSize, err := strconv.Atoi(Env("MONGO_MIN_POOL"))
-	utils.LogIfError("=> minPoolSize error: ", err)
+	minPoolSize, minPoolErr := strconv.Atoi(Env("MONGO_MIN_POOL"))
+	if minPoolErr != nil {
+		log.Fatal("=> minPoolSize error:", minPoolSize)
+	}
 
-	maxPoolSize, err := strconv.Atoi(Env("MONGO_MAX_POOL"))
-	utils.LogIfError("=> maxPoolSize error: ", err)
+	maxPoolSize, maxPoolErr := strconv.Atoi(Env("MONGO_MAX_POOL"))
+	if maxPoolErr != nil {
+		log.Fatal("=> maxPoolSize error:", maxPoolErr)
+	}
 
-	maxConnIdle, err := strconv.Atoi(Env("MONGO_MAX_CONN_IDLE"))
-	utils.LogIfError("=> maxConnIdle error: ", err)
+	maxConnIdle, maxConnErr := strconv.Atoi(Env("MONGO_MAX_CONN_IDLE"))
+	if maxConnErr != nil {
+		log.Fatal("=> maxConnIdle error:", maxConnErr)
+	}
 
 	clientOption := options.Client().
 		ApplyURI(Env("MONGO_URI")).
