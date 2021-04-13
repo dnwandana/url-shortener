@@ -14,13 +14,11 @@ import (
 func main() {
 	db, _ := config.DatabaseConnection()
 
-	// TODO: using env value
-	urlCollection := db.Collection("urls")
+	urlCollection := db.Collection(config.Env("URL_COLLECTION"))
 	urlRepo := repository.NewUrlRepository(urlCollection)
 	urlService := services.NewUrlService(urlRepo)
 
-	// TODO: using env value
-	userCollection := db.Collection("users")
+	userCollection := db.Collection(config.Env("USER_COLLECTION"))
 	userRepo := repository.NewUserRepository(userCollection)
 	userService := services.NewUserService(userRepo)
 
@@ -31,6 +29,5 @@ func main() {
 	routes.UserRoutes(apiRoute, userService)
 	routes.UrlRoutes(apiRoute, urlService)
 
-	// TODO: using env value
 	log.Fatal(app.Listen(":5000"))
 }
