@@ -6,7 +6,7 @@ import (
 )
 
 type UrlService interface {
-	ListAllShortUrl(userID string) (*[]models.Url, error)
+	ListAllShortUrl(userID string) (*[]models.UrlResponse, error)
 	CreateShortUrl(url *models.Url) (*models.Url, error)
 	GetShortUrl(id string) (*models.Url, error)
 	UpdateShortUrl(id string, url *models.Url) (*models.Url, error)
@@ -23,7 +23,7 @@ func NewUrlService(r repository.UrlRepository) UrlService {
 	}
 }
 
-func (s *urlService) ListAllShortUrl(userID string) (*[]models.Url, error) {
+func (s *urlService) ListAllShortUrl(userID string) (*[]models.UrlResponse, error) {
 	return s.urlRepository.FetchUrls(userID)
 }
 

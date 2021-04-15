@@ -69,16 +69,18 @@ func addUrl(service services.UrlService) fiber.Handler {
 			UpdatedAt: time.Now(),
 		}
 		result, dberr := service.CreateShortUrl(&data)
-		response := models.UrlResponse{
-			ID:    result.ID,
-			Title: result.Title,
-			URL:   result.URL,
-		}
 		if dberr != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"statusCode": fiber.StatusBadRequest,
 				"error":      dberr.Error(),
 			})
+		}
+		response := models.UrlResponse{
+			ID:        result.ID,
+			Title:     result.Title,
+			URL:       result.URL,
+			CreatedAt: result.CreatedAt,
+			UpdatedAt: result.CreatedAt,
 		}
 		return c.Status(fiber.StatusCreated).JSON(fiber.Map{
 			"statusCode": fiber.StatusCreated,
@@ -109,16 +111,36 @@ func updateUrl(service services.UrlService) fiber.Handler {
 				"error":      err.Error(),
 			})
 		}
-		result, dberr := service.UpdateShortUrl(id, reqBody)
+		data := models.Url{
+			ID:        reqBody.ID,
+			Title:     reqBody.Title,
+			URL:       reqBody.URL,
+			UpdatedAt: time.Now(),
+		}
+		result, dberr := service.UpdateShortUrl(id, &data)
 		if dberr != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"statusCode": fiber.StatusBadRequest,
 				"error":      dberr.Error(),
 			})
 		}
+		url, urlErr := service.GetShortUrl(id)
+		if urlErr != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"statusCode": fiber.StatusBadRequest,
+				"error":      urlErr.Error(),
+			})
+		}
+		response := models.UrlResponse{
+			ID:        result.ID,
+			Title:     result.Title,
+			URL:       result.URL,
+			CreatedAt: url.CreatedAt,
+			UpdatedAt: result.UpdatedAt,
+		}
 		return c.JSON(fiber.Map{
 			"statusCode": fiber.StatusOK,
-			"url":        result,
+			"url":        response,
 		})
 	}
 }

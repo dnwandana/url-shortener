@@ -12,7 +12,7 @@ import (
 )
 
 type UrlRepository interface {
-	FetchUrls(userID string) (*[]models.Url, error)
+	FetchUrls(userID string) (*[]models.UrlResponse, error)
 	InsertUrl(url *models.Url) (*models.Url, error)
 	FetchUrl(id string) (*models.Url, error)
 	UpdateUrl(id string, url *models.Url) (*models.Url, error)
@@ -29,8 +29,8 @@ func NewUrlRepository(collection *mongo.Collection) UrlRepository {
 	}
 }
 
-func (r *urlRepository) FetchUrls(userID string) (*[]models.Url, error) {
-	var urls []models.Url
+func (r *urlRepository) FetchUrls(userID string) (*[]models.UrlResponse, error) {
+	var urls []models.UrlResponse
 	filter := bson.M{
 		"userId": userID,
 	}
@@ -39,7 +39,7 @@ func (r *urlRepository) FetchUrls(userID string) (*[]models.Url, error) {
 		return nil, err
 	}
 	for cursor.Next(context.TODO()) {
-		var url models.Url
+		var url models.UrlResponse
 		err = cursor.Decode(&url)
 		if err != nil {
 			return nil, err
