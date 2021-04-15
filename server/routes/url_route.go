@@ -6,6 +6,8 @@ import (
 	"github.com/dnwandana/url-shortener/middleware"
 	"github.com/dnwandana/url-shortener/models"
 	"github.com/dnwandana/url-shortener/services"
+	"github.com/dnwandana/url-shortener/utils"
+	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
 	gonanoid "github.com/matoous/go-nanoid/v2"
 )
@@ -22,7 +24,9 @@ var alphabet string = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstu
 
 func getUrls(service services.UrlService) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		result, err := service.ListAllShortUrl()
+		token := c.Locals("user").(*jwt.Token)
+		userID := utils.ExtractIDFromJWT(token)
+		result, err := service.ListAllShortUrl(userID)
 		if err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"statusCode": fiber.StatusBadRequest,
@@ -46,15 +50,30 @@ func addUrl(service services.UrlService) fiber.Handler {
 				"error":      err.Error(),
 			})
 		}
-		nanoid, _ := gonanoid.Generate(alphabet, 6)
+		userID := c.Cookies("userId")
+		if userID == "" {
+			userID = ""
+		}
+		nanoid, nanoidErr := gonanoid.Generate(alphabet, 6)
+		if nanoidErr != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"statusCode": fiber.StatusInternalServerError,
+				"error":      nanoidErr.Error(),
+			})
+		}
 		data := models.Url{
+			UserID:    userID,
 			ID:        nanoid,
 			URL:       reqBody.URL,
 			CreatedAt: time.Now(),
 			UpdatedAt: time.Now(),
 		}
-
 		result, dberr := service.CreateShortUrl(&data)
+		response := models.UrlResponse{
+			ID:    result.ID,
+			Title: result.Title,
+			URL:   result.URL,
+		}
 		if dberr != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"statusCode": fiber.StatusBadRequest,
@@ -63,7 +82,7 @@ func addUrl(service services.UrlService) fiber.Handler {
 		}
 		return c.Status(fiber.StatusCreated).JSON(fiber.Map{
 			"statusCode": fiber.StatusCreated,
-			"url":        result,
+			"url":        response,
 		})
 	}
 }

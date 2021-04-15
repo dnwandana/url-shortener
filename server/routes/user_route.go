@@ -100,7 +100,9 @@ func signIn(service services.UserService) fiber.Handler {
 				"error":      tokenErr.Error(),
 			})
 		}
-		jwtCookie := utils.SetCookies(token)
+		userIdCookie := utils.SetCookies("userId", user.ID.Hex())
+		jwtCookie := utils.SetCookies("token", token)
+		c.Cookie(userIdCookie)
 		c.Cookie(jwtCookie)
 		return c.SendStatus(fiber.StatusOK)
 	}
