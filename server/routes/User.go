@@ -93,7 +93,15 @@ func signIn(service services.UserService) fiber.Handler {
 				"error":      "invalid password",
 			})
 		}
-		// TODO: return Cookies(JWT)
+		token, tokenErr := utils.GenerateJWT(user)
+		if tokenErr != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"statusCode": fiber.StatusInternalServerError,
+				"error":      tokenErr.Error(),
+			})
+		}
+		jwtCookie := utils.SetCookies(token)
+		c.Cookie(jwtCookie)
 		return c.SendStatus(fiber.StatusOK)
 	}
 }

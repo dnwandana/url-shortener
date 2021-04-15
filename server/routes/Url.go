@@ -3,6 +3,7 @@ package routes
 import (
 	"time"
 
+	"github.com/dnwandana/url-shortener/middleware"
 	"github.com/dnwandana/url-shortener/models"
 	"github.com/dnwandana/url-shortener/services"
 	"github.com/gofiber/fiber/v2"
@@ -10,11 +11,11 @@ import (
 )
 
 func UrlRoutes(app fiber.Router, service services.UrlService) {
-	app.Get("/", getUrls(service))
+	app.Get("/", middleware.CookieRequired(), middleware.JWTRequired(), getUrls(service))
 	app.Post("/", addUrl(service))
 	app.Get("/:id", getUrl(service))
-	app.Put("/:id", updateUrl(service))
-	app.Delete("/:id", deleteUrl(service))
+	app.Put("/:id", middleware.CookieRequired(), middleware.JWTRequired(), updateUrl(service))
+	app.Delete("/:id", middleware.CookieRequired(), middleware.JWTRequired(), deleteUrl(service))
 }
 
 var alphabet string = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
