@@ -9,15 +9,15 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func SetCookies(token string) *fiber.Cookie {
+func SetCookies(name, value string) *fiber.Cookie {
 	jwtLife, jwtLifeErr := strconv.Atoi(config.Env("JWT_LIFE"))
 	if jwtLifeErr != nil {
 		log.Fatal("=> jwtLifeErr error:", jwtLifeErr)
 	}
 
 	cookie := new(fiber.Cookie)
-	cookie.Name = "token"
-	cookie.Value = token
+	cookie.Name = name
+	cookie.Value = value
 	cookie.Expires = time.Now().Add(time.Duration(jwtLife) * time.Hour)
 	// cookie.Secure = true
 	// cookie.HTTPOnly = true
