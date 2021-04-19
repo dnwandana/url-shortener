@@ -16,46 +16,47 @@ func UserRoutes(app fiber.Router, service services.UserService) {
 
 func signUp(service services.UserService) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		var reqBody *models.UserSignUp
-		err := c.BodyParser(&reqBody)
-		if err != nil {
+		var data *models.UserSignUp
+		parserErr := c.BodyParser(&data)
+		if parserErr != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"statusCode": fiber.StatusBadRequest,
-				"error":      err.Error(),
+				"error":      parserErr.Error(),
 			})
 		}
-		isEmailExist, _ := service.Find("email", reqBody.Email)
+		validationErr := utils.Validate(data)
+		if validationErr != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"statusCode": fiber.StatusBadRequest,
+				"error":      validationErr,
+			})
+		}
+		isEmailExist, _ := service.Find("email", data.Email)
 		if isEmailExist != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"statusCode": fiber.StatusBadRequest,
 				"error":      "email already exist",
 			})
 		}
-		if reqBody.Password != reqBody.ConfirmationPassword {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"statusCode": fiber.StatusBadRequest,
-				"error":      "confirmation password don't match",
-			})
-		}
-		hashedPassword, hashErr := utils.HashPassword(reqBody.Password)
+		hashedPassword, hashErr := utils.HashPassword(data.Password)
 		if hashErr != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"statusCode": fiber.StatusInternalServerError,
 				"error":      hashErr.Error(),
 			})
 		}
-		data := models.User{
-			Fullname:  reqBody.Fullname,
-			Email:     reqBody.Email,
+		user := models.User{
+			Fullname:  data.Fullname,
+			Email:     data.Email,
 			Password:  hashedPassword,
 			CreatedAt: time.Now(),
 			UpdatedAt: time.Now(),
 		}
-		result, dbErr := service.Create(&data)
+		result, dbErr := service.Create(&user)
 		if dbErr != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"statusCode": fiber.StatusBadRequest,
-				"error":      err.Error(),
+				"error":      dbErr.Error(),
 			})
 		}
 		response := models.UserSignUpResponse{
@@ -71,22 +72,29 @@ func signUp(service services.UserService) fiber.Handler {
 
 func signIn(service services.UserService) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		var reqBody *models.User
-		err := c.BodyParser(&reqBody)
-		if err != nil {
+		var data *models.UserSignIn
+		parserErr := c.BodyParser(&data)
+		if parserErr != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"statusCode": fiber.StatusBadRequest,
-				"error":      err.Error(),
+				"error":      parserErr.Error(),
 			})
 		}
-		user, _ := service.Find("email", reqBody.Email)
+		validationErr := utils.Validate(data)
+		if validationErr != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"statusCode": fiber.StatusBadRequest,
+				"error":      validationErr,
+			})
+		}
+		user, _ := service.Find("email", data.Email)
 		if user == nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"statusCode": fiber.StatusBadRequest,
 				"error":      "no user exist",
 			})
 		}
-		isPasswordMatch := utils.VerifyPassword(user.Password, reqBody.Password)
+		isPasswordMatch := utils.VerifyPassword(user.Password, data.Password)
 		if !isPasswordMatch {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"statusCode": fiber.StatusBadRequest,

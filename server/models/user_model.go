@@ -7,19 +7,24 @@ import (
 )
 
 type User struct {
-	ID        primitive.ObjectID `json:"id" bson:"_id"`
-	Fullname  string             `json:"fullname" bson:"fullname"`
-	Email     string             `json:"email" bson:"email"`
-	Password  string             `json:"password" bson:"password"`
-	CreatedAt time.Time          `json:"-" bson:"createdAt"`
-	UpdatedAt time.Time          `json:"-" bson:"updatedAt"`
+	ID        primitive.ObjectID `bson:"_id"`
+	Fullname  string             `bson:"fullname"`
+	Email     string             `bson:"email"`
+	Password  string             `bson:"password"`
+	CreatedAt time.Time          `bson:"createdAt"`
+	UpdatedAt time.Time          `bson:"updatedAt"`
+}
+
+type UserSignIn struct {
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required,min=6"`
 }
 
 type UserSignUp struct {
-	Fullname             string `json:"fullname"`
-	Email                string `json:"email"`
-	Password             string `json:"password"`
-	ConfirmationPassword string `json:"confirmationPassword"`
+	Fullname             string `json:"fullname" validate:"required"`
+	Email                string `json:"email" validate:"required,email"`
+	Password             string `json:"password" validate:"required,min=6"`
+	ConfirmationPassword string `json:"confirmationPassword" validate:"required,min=6,eqfield=Password"`
 }
 
 type UserSignUpResponse struct {

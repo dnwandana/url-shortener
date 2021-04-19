@@ -7,13 +7,19 @@ import (
 )
 
 type Url struct {
-	ObjectID  primitive.ObjectID `json:"-" bson:"_id"`
-	UserID    string             `json:"userId" bson:"userId"`
-	ID        string             `json:"id" bson:"id"`
-	Title     string             `json:"title" bson:"title"`
-	URL       string             `json:"url" bson:"url"`
-	CreatedAt time.Time          `json:"createdAt" bson:"createdAt"`
-	UpdatedAt time.Time          `json:"updatedAt" bson:"updatedAt"`
+	ObjectID  primitive.ObjectID `bson:"_id"`
+	UserID    string             `bson:"userId"`
+	ID        string             `bson:"id"`
+	Title     string             `bson:"title"`
+	URL       string             `bson:"url"`
+	CreatedAt time.Time          `bson:"createdAt"`
+	UpdatedAt time.Time          `bson:"updatedAt"`
+}
+
+type UrlForm struct {
+	ID    string `json:"id"`
+	Title string `json:"title"`
+	URL   string `json:"url" validate:"required,url"`
 }
 
 type UrlResponse struct {
