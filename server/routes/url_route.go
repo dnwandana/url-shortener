@@ -9,7 +9,6 @@ import (
 	"github.com/dnwandana/url-shortener/utils"
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
-	gonanoid "github.com/matoous/go-nanoid/v2"
 )
 
 func UrlRoutes(app fiber.Router, service services.UrlService) {
@@ -19,8 +18,6 @@ func UrlRoutes(app fiber.Router, service services.UrlService) {
 	app.Put("/:id", middleware.CookieRequired(), middleware.JWTRequired(), updateUrl(service))
 	app.Delete("/:id", middleware.CookieRequired(), middleware.JWTRequired(), deleteUrl(service))
 }
-
-var alphabet string = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 
 func getUrls(service services.UrlService) fiber.Handler {
 	return func(c *fiber.Ctx) error {
@@ -58,7 +55,7 @@ func addUrl(service services.UrlService) fiber.Handler {
 			})
 		}
 		userID := c.Cookies("userId")
-		nanoid, nanoidErr := gonanoid.Generate(alphabet, 6)
+		nanoid, nanoidErr := utils.GenerateNanoID()
 		if nanoidErr != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"statusCode": fiber.StatusInternalServerError,
