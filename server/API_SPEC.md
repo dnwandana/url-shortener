@@ -1,5 +1,82 @@
 # API Specification
 
+## User Sign Up
+
+- Method: `POST`
+- Endpoint: `/go/sign-up`
+- Headers:
+  - Content-Type: application/json
+  - Accept: application/json
+- Body:
+  ```json
+  {
+    "fullname": "string",
+    "email": "string",
+    "password": "string",
+    "confirmationPassword": "string"
+  }
+  ```
+
+Success Response:
+
+- Http status code: `201`
+- Body:
+  ```json
+  {
+    "statusCode": "integer",
+    "user": {
+      "id": "string",
+      "fullname": "string"
+    }
+  }
+  ```
+
+Error Response:
+
+- Http status code: `400`
+- Body:
+  ```json
+  {
+    "statusCode": "integer",
+    "error": ["string"]
+  }
+  ```
+
+## User Sign In
+
+- Method: `POST`
+- Endpoint: `/go/sign-in`
+- Headers:
+  - Content-Type: application/json
+  - Accept: application/json
+- Body:
+  ```json
+  {
+    "email": "string",
+    "password": "string"
+  }
+  ```
+
+Success Response:
+
+- Http status code: `200`
+- Headers:
+  - userId Cookie
+  - JWT Cookie
+- Body:
+  `OK`
+
+Error Response:
+
+- Http status code: `400`
+- Body:
+  ```json
+  {
+    "statusCode": "integer",
+    "error": ["string"]
+  }
+  ```
+
 ## List All Short URLs
 
 Request:
@@ -7,6 +84,8 @@ Request:
 - Method: `GET`
 - Endpoint: `/go`
 - Headers:
+  - userId Cookie
+  - JWT Cookie
   - Accept: application/json
 
 Success Response:
@@ -20,7 +99,9 @@ Success Response:
       {
         "id": "string",
         "title": "string",
-        "url": "string"
+        "url": "string",
+        "createdAt": "datetime",
+        "updatedAt": "datetime"
       }
     ]
   }
@@ -44,11 +125,15 @@ Request:
 - Method: `POST`
 - Endpoint: `/go`
 - Headers:
+  - userId Cookie (Optional)
+  - JWT Cookie (Optional)
   - Content-Type: application/json
   - Accept: application/json
 - Body:
   ```json
   {
+    "id": "optional string",
+    "title": "optional string",
     "url": "string"
   }
   ```
@@ -63,7 +148,9 @@ Success Response:
     "url": {
       "id": "string",
       "title": "string",
-      "url": "string"
+      "url": "string",
+      "createdAt": "datetime",
+      "updatedAt": "datetime"
     }
   }
   ```
@@ -101,6 +188,8 @@ Request:
 - Method: `PUT`
 - Endpoint: `/go/{id}`
 - Headers:
+  - userId Cookie
+  - JWT Cookie
   - Content-Type: application/json
   - Accept: application/json
 - Body:
@@ -122,7 +211,9 @@ Success Response:
     "url": {
       "id": "string",
       "title": "string",
-      "url": "string"
+      "url": "string",
+      "createdAt": "datetime",
+      "updatedAt": "datetime"
     }
   }
   ```
@@ -144,6 +235,9 @@ Request:
 
 - Method: `DELETE`
 - Endpoint: `/go/{id}`
+- Headers:
+  - userId Cookie
+  - JWT Cookie
 
 Success Response:
 
