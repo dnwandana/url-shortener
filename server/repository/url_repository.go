@@ -29,6 +29,7 @@ func NewUrlRepository(collection *mongo.Collection) UrlRepository {
 	}
 }
 
+// FetchUrls method which returns all shortUrls belonging to that user.
 func (r *urlRepository) FetchUrls(userID string) (*[]models.UrlResponse, error) {
 	var urls []models.UrlResponse
 	filter := bson.M{
@@ -49,6 +50,7 @@ func (r *urlRepository) FetchUrls(userID string) (*[]models.UrlResponse, error) 
 	return &urls, nil
 }
 
+// InsertUrl method is used to create a new shortUrl.
 func (r *urlRepository) InsertUrl(url *models.Url) (*models.Url, error) {
 	url.ObjectID = primitive.NewObjectID()
 	_, err := r.Collection.InsertOne(context.Background(), url)
@@ -58,6 +60,7 @@ func (r *urlRepository) InsertUrl(url *models.Url) (*models.Url, error) {
 	return url, nil
 }
 
+// FetchUrl method is used to get a specific shortUrl.
 func (r *urlRepository) FetchUrl(id string) (*models.Url, error) {
 	var url *models.Url
 	err := r.Collection.FindOne(context.Background(), bson.M{"id": id}).Decode(&url)
@@ -67,6 +70,7 @@ func (r *urlRepository) FetchUrl(id string) (*models.Url, error) {
 	return url, nil
 }
 
+// UpdateUrl method is used to update the existing shortUrl from database.
 func (r *urlRepository) UpdateUrl(id string, url *models.Url) (*models.Url, error) {
 	filter := bson.M{"id": id}
 	update := bson.D{
@@ -90,6 +94,7 @@ func (r *urlRepository) UpdateUrl(id string, url *models.Url) (*models.Url, erro
 	return url, nil
 }
 
+// DeleteUrl method is used to delete the existing shortUrl from database.
 func (r *urlRepository) DeleteUrl(id string) error {
 	result, err := r.Collection.DeleteOne(context.Background(), bson.M{"id": id})
 	if err != nil {

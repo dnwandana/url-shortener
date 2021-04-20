@@ -14,17 +14,21 @@ var (
 	validate *validator.Validate
 )
 
+// Validate struct, returns slice of string error.
 func Validate(object interface{}) []string {
+	// declare universal-translator
 	en := en.New()
 	uni = ut.New(en, en)
-
 	trans, _ := uni.GetTranslator("en")
-
+	// new validator instance
 	validate = validator.New()
+	// register translator
 	en_translations.RegisterDefaultTranslations(validate, trans)
 
+	// validate Struct level
 	validationErr := validate.Struct(object)
-
+	// if there is an error
+	// returns slice of string error
 	if validationErr != nil {
 		var errors []string
 		for _, err := range validationErr.(validator.ValidationErrors) {

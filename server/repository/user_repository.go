@@ -24,6 +24,7 @@ func NewUserRepository(collection *mongo.Collection) UserRepository {
 	}
 }
 
+// Insert method is used to create a new users.
 func (r *userRepository) Insert(user *models.User) (*models.User, error) {
 	user.ID = primitive.NewObjectID()
 	_, err := r.Collection.InsertOne(context.Background(), user)
@@ -33,6 +34,7 @@ func (r *userRepository) Insert(user *models.User) (*models.User, error) {
 	return user, nil
 }
 
+// Search method is used to search users from the database with the given field and value, based on the User struct.
 func (r *userRepository) Search(field, value string) (*models.User, error) {
 	var user *models.User
 	filter := bson.M{

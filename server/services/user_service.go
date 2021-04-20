@@ -20,10 +20,12 @@ func NewUserService(r repository.UserRepository) UserService {
 	}
 }
 
+// Create method is used to create a new users.
 func (s *userService) Create(user *models.User) (*models.User, error) {
 	return s.userRepository.Insert(user)
 }
 
+// Find method is used to search users from the database with the given field and value, based on the User struct.
 func (s *userService) Find(field, value string) (*models.User, error) {
 	return s.userRepository.Search(field, value)
 }
