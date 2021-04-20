@@ -96,7 +96,7 @@ func getUrl(service services.UrlService) fiber.Handler {
 		id := c.Params("id")
 		result, err := service.GetShortUrl(id)
 		if err != nil {
-			return c.Redirect("/404")
+			return c.Redirect("/404", fiber.StatusNotFound)
 		}
 		return c.Redirect(result.URL)
 	}
