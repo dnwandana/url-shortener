@@ -19,8 +19,11 @@ func SetCookies(name, value string) *fiber.Cookie {
 	cookie.Name = name
 	cookie.Value = value
 	cookie.Expires = time.Now().Add(time.Duration(jwtLife) * time.Hour)
-	// cookie.Secure = true
-	// cookie.HTTPOnly = true
+	stage := config.Env("STAGE")
+	if stage != "DEVELOPMENT" {
+		cookie.Secure = true
+		cookie.HTTPOnly = true
+	}
 
 	return cookie
 }
