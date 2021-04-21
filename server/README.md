@@ -25,21 +25,44 @@ For example, you can see [`.env.example`](.env.example)
 
 ### Downloading Packages
 
-```go
+```bash
 go mod download
 ```
 
 ### Running The Application
 
-```go
+```bash
 go run main.go
 ```
 
 ### Compile The Application
 
-```go
+```bash
 go build main.go
 ```
+
+## Dockerize The Application
+
+1.  Build docker image
+    ```bash
+    docker build -t url-server:1.0.1 .
+    ```
+2.  Run docker image
+    ```bash
+    docker run -d --name url-server \
+    -p 5000:5000 \
+    -e MONGO_URI="mongodb://localhost:27017" \
+    -e MONGO_MIN_POOL=10 \
+    -e MONGO_MAX_POOL=100 \
+    -e MONGO_MAX_CONN_IDLE=60 \
+    -e MONGO_DATABASE="urlShortener" \
+    -e URL_COLLECTION="urls" \
+    -e USER_COLLECTION="users" \
+    -e JWT_SECRET="SECRET" \
+    -e JWT_LIFE=6 \
+    -e STAGE="DEVELOPMENT" \
+    url-server:1.0.1
+    ```
 
 ## Reference
 
