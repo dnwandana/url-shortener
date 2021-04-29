@@ -13,7 +13,7 @@ const Navbar = (): JSX.Element => {
       <div className="container max-w-6xl mx-auto px-4 pt-5 pb-6 md:flex md:justify-between md:items-center">
         <div className="flex items-center justify-between">
           <Link href="/">
-            <a className="text-gradient bg-gradient-to-r from-indigo-600 to-gray-900 font-bold text-2xl md:text-3xl hover:text-gray-700">
+            <a className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-900 font-bold text-2xl md:text-3xl">
               URL Shortener
             </a>
           </Link>
