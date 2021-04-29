@@ -1,34 +1,60 @@
+# Client-side Application
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+## Project Setup
 
-First, run the development server:
+### Environment Variables
+
+- NEXT_PUBLIC_API_ENDPOINT
+
+For example, you can see [`.env.example`](.env.example)
+
+### Installing Depedencies
 
 ```bash
-npm run dev
+yarn install
 # or
-yarn dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Compiles and hot-reloads for development
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+```bash
+yarn dev
+# or
+npm run dev
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+### Compiles and minifies for production
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+```bash
+yarn build
+# or
+npm run build
+```
+
+## Dockerize The Application
+
+1.  Build docker image
+    ```bash
+    docker build \
+    --build-arg API_ENDPOINT="http://localhost:5000/go" \
+    -t url-client:1.0.1 .
+    ```
+2.  Run docker image
+    ```bash
+    docker run -d --name url-client \
+    -p 3000:3000 \
+    url-client:1.0.1
+    ```
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+To learn more about this project, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- [React.js Documentation](https://reactjs.org/docs/getting-started.html)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Axios, Promise based HTTP client for the browser and node.js](https://github.com/axios/axios)
+- [Getting Started with React Hook Form](https://react-hook-form.com/get-started)
+- [Yup, a JavaScript schema builder for value parsing and validation](https://github.com/jquense/yup)
