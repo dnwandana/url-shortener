@@ -11,14 +11,14 @@ services:
       - app-network
     restart: unless-stopped
 
-  frontend:
-    container_name: frontend
+  client:
+    container_name: client
     build:
       context: ./client
       args:
         - API_ENDPOINT=https://domain.tld/go
     ports:
-      - 3000:80
+      - 3000:3000
     networks:
       - app-network
     restart: unless-stopped
@@ -40,7 +40,7 @@ services:
     restart: unless-stopped
     depends_on:
       - backend
-      - frontend
+      - client
 
 networks:
   app-network:
