@@ -73,7 +73,7 @@ const Homepage = () => {
               Shorten a long URL and share as a powerful
             </h2>
             <div className="mt-6 md:mt-8 flex space-x-2 md:space-x-4">
-              <Link href="/sign-up">
+              <Link href="/under-construction">
                 <a className="flex justify-center items-center w-1/2 md:w-1/4 px-5 py-3 rounded-md font-medium text-base transition-colors duration-300 ease-in-out bg-indigo-700 text-indigo-100 hover:bg-indigo-600 hover:text-indigo-50 focus:outline-none focus:ring focus:ring-indigo-300">
                   Sign Up
                 </a>
@@ -167,7 +167,7 @@ const Homepage = () => {
               <h2 className="text-gray-800 text-center font-bold text-xl md:text-2xl lg:text-3xl mb-4">
                 Free URL Shortener
               </h2>
-              <Link href="/sign-up">
+              <Link href="/under-construction">
                 <a className="px-5 py-3 rounded-md font-medium text-base text-center transition-colors duration-300 ease-in-out bg-indigo-700 text-indigo-100 hover:bg-indigo-600 hover:text-indigo-50 focus:outline-none focus:ring focus:ring-indigo-300 tracking">
                   Sign Up Now
                 </a>
