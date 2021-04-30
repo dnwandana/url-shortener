@@ -39,7 +39,7 @@ npm run build
 1.  Build docker image
     ```bash
     docker build \
-    --build-arg API_ENDPOINT="http://localhost:5000/go" \
+    --build-arg API_ENDPOINT=http://localhost:5000/go \
     -t url-client:1.0.1 .
     ```
 2.  Run docker image
