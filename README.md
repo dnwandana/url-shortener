@@ -1,6 +1,6 @@
 # URL Shortener
 
-Fullstack URL Shortener, built with Mongo, Express, React, and Node.Js (MERN STACK)
+Fullstack URL Shortener, built with MongoDB, Golang GoFiber, and TypeScript Next.js
 
 ## Server Application
 
