@@ -51,16 +51,16 @@ go build main.go
     ```bash
     docker run -d --name url-server \
     -p 5000:5000 \
-    -e MONGO_URI="mongodb://localhost:27017" \
+    -e MONGO_URI=mongodb://localhost:27017 \
     -e MONGO_MIN_POOL=10 \
     -e MONGO_MAX_POOL=100 \
     -e MONGO_MAX_CONN_IDLE=60 \
-    -e MONGO_DATABASE="urlShortener" \
-    -e URL_COLLECTION="urls" \
-    -e USER_COLLECTION="users" \
-    -e JWT_SECRET="SECRET" \
+    -e MONGO_DATABASE=urlShortener \
+    -e URL_COLLECTION=urls \
+    -e USER_COLLECTION=users \
+    -e JWT_SECRET=SECRET \
     -e JWT_LIFE=6 \
-    -e STAGE="DEVELOPMENT" \
+    -e STAGE=DEVELOPMENT \
     url-server:1.0.1
     ```
 
