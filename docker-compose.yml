@@ -1,12 +1,21 @@
 services:
-  backend:
-    container_name: backend
+  server:
+    container_name: server
     build:
       context: ./server
     ports:
       - 5000:5000
-    env_file:
-      - ./server/.env
+    environment:
+      - MONGO_URI=mongodb://localhost:27017
+      - MONGO_MIN_POOL=10
+      - MONGO_MAX_POOL=100
+      - MONGO_MAX_CONN_IDLE=60
+      - MONGO_DATABASE=urlShortener
+      - URL_COLLECTION=urls
+      - USER_COLLECTION=users
+      - JWT_SECRET=SECRET
+      - JWT_LIFE=6
+      - STAGE=PRODUCTION
     networks:
       - app-network
     restart: unless-stopped
@@ -23,7 +32,7 @@ services:
       - app-network
     restart: unless-stopped
     depends_on:
-      - backend
+      - server
 
   web-server:
     container_name: web-server
@@ -39,7 +48,7 @@ services:
       - app-network
     restart: unless-stopped
     depends_on:
-      - backend
+      - server
       - client
 
 networks:

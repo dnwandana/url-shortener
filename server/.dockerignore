@@ -1,5 +1,4 @@
-node_modules
-dist
-.dockerignore
-*.env
+.env
+.env.example
+*.md
 Dockerfile
