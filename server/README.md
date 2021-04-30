@@ -64,8 +64,10 @@ go build main.go
     url-server:1.0.1
     ```
 
-## Reference
+## Learn More
 
-- [Fiber Documentation](https://docs.gofiber.io/ "Fiber Documentation")
-- [MongoDB Go Driver](https://github.com/mongodb/mongo-go-driver "MongoDB Go Driver")
-- [Golang Package Validator](https://github.com/go-playground/validator "Golang Package Validator")
+To learn more about this project, take a look at the following resources:
+
+- [Fiber Documentation](https://docs.gofiber.io/)
+- [MongoDB Go Driver](https://github.com/mongodb/mongo-go-driver)
+- [Golang Package Validator](https://github.com/go-playground/validator)
