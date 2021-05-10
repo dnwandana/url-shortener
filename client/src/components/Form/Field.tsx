@@ -25,7 +25,7 @@ const Field = ({
 }: FieldProps): JSX.Element => {
   return (
     <>
-      {LabelClass === "" && (
+      {LabelClass !== "" && (
         <label htmlFor={InputId} className={LabelClass}>
           {Label}
         </label>
