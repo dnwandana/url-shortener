@@ -13,7 +13,10 @@ import (
 
 func main() {
 	// get database connection
-	db, _ := config.DatabaseConnection()
+	db, dbErr := config.DatabaseConnection()
+	if dbErr != nil {
+		log.Fatal("=> database error:", dbErr.Error())
+	}
 
 	// setup url collection, instantiate repo, and services
 	urlCollection := db.Collection(config.Env("URL_COLLECTION"))
@@ -27,8 +30,11 @@ func main() {
 
 	// instantitate fiber application
 	app := fiber.New()
-	// enable cors
-	app.Use(cors.New())
+
+	// register cors middleware and allow browser expose credentials
+	app.Use(cors.New(cors.Config{
+		AllowCredentials: true,
+	}))
 
 	// setup userService and urlService into `/go` endpoint
 	apiRoute := app.Group("/go")
