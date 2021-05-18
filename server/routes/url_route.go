@@ -120,10 +120,10 @@ func getUrl(service services.UrlService) fiber.Handler {
 		// check if there is an error
 		if err != nil {
 			// if there is an error, application will send to `/404` endpoint
-			return c.Redirect("/404", fiber.StatusNotFound)
+			return c.Redirect("/404")
 		}
 		// if there are no error, application will send to specific URL
-		return c.Redirect(result.URL)
+		return c.Redirect(result.URL, fiber.StatusMovedPermanently)
 	}
 }
 
