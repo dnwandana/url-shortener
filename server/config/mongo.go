@@ -18,19 +18,19 @@ func DatabaseConnection() (*mongo.Database, error) {
 	// get minimum number of connections allowed
 	minPoolSize, minPoolErr := strconv.Atoi(Env("MONGO_MIN_POOL"))
 	if minPoolErr != nil {
-		log.Fatal("=> minPoolSize error:", minPoolSize)
+		log.Fatal("=> minPoolSize error:", minPoolErr.Error())
 	}
 
 	// get maximum number of connections allowed
 	maxPoolSize, maxPoolErr := strconv.Atoi(Env("MONGO_MAX_POOL"))
 	if maxPoolErr != nil {
-		log.Fatal("=> maxPoolSize error:", maxPoolErr)
+		log.Fatal("=> maxPoolSize error:", maxPoolErr.Error())
 	}
 
 	// get maximum time that connections will remain idle in second
 	maxConnIdle, maxConnErr := strconv.Atoi(Env("MONGO_MAX_CONN_IDLE"))
 	if maxConnErr != nil {
-		log.Fatal("=> maxConnIdle error:", maxConnErr)
+		log.Fatal("=> maxConnIdle error:", maxConnErr.Error())
 	}
 
 	// setting client options
