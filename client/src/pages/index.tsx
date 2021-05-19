@@ -1,15 +1,16 @@
-import { useRef, useState } from "react"
-import dynamic from "next/dynamic"
-import { useForm } from "react-hook-form"
 import * as yup from "yup"
+import { AxiosError, AxiosResponse } from "axios"
+import { useRef, useState } from "react"
+import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
-import axios from "axios"
+import Button from "../components/Button"
+import Field from "../components/Form/Field"
+import Form from "../components/Form"
 import Link from "next/link"
 import Metadata from "../components/Metadata"
 import Navbar from "../components/Navbar"
-import Form from "../components/Form"
-import Field from "../components/Form/Field"
-import Button from "../components/Button"
+import axios from "../axiosInstance"
+import dynamic from "next/dynamic"
 
 const FormAlert = dynamic(() => import("../components/Alert"))
 const FormResult = dynamic(() => import("../components/Form/Result"))
@@ -27,17 +28,19 @@ type ApiResponse = {
     createdAt: string
     updatedAt: string
   }
+  error: string
 }
 
-const formValidationSchema = yup.object().shape({
-  url: yup
-    .string()
-    .url("Please, provide a valid url.")
-    .required("Please, provide a valid url."),
-})
-
 const Homepage = () => {
+  const formValidationSchema = yup.object().shape({
+    url: yup
+      .string()
+      .url("Please, provide a valid url.")
+      .required("Please, provide a valid url."),
+  })
+
   const [isSuccess, setIsSuccess] = useState<boolean>(false)
+  const [alertMessage, setAlertMessage] = useState<string>("")
   const [longUrl, setLongUrl] = useState<string>("")
   const [shortUrl, setShortUrl] = useState<string>("")
   const { register, handleSubmit, errors } = useForm<FormInput>({
@@ -45,13 +48,18 @@ const Homepage = () => {
   })
 
   const onSubmit = async (url: FormInput) => {
-    const domain = process.env.NEXT_PUBLIC_API_ENDPOINT
-    const res = await axios.post(domain, url)
-    const data: ApiResponse = res.data
-    if (res.status === 201) {
+    try {
+      const domain = process.env.NEXT_PUBLIC_API_ENDPOINT
+      const response = await axios.post("", url)
+      const data: ApiResponse = response.data
       setIsSuccess(true)
       setShortUrl(`${domain}/${data.url.id}`)
       setLongUrl(data.url.url)
+    } catch (err) {
+      const error = err as AxiosError
+      const { data }: AxiosResponse<ApiResponse> = error.response
+      setIsSuccess(false)
+      setAlertMessage(`Error: ${data.error}`)
     }
   }
 
@@ -113,12 +121,12 @@ const Homepage = () => {
             />
           </Form>
           {/* <Alert Message /> */}
-          {errors.url?.message && (
+          {errors.url?.message || alertMessage !== "" ? (
             <FormAlert
               AlertClass="block w-full py-4 rounded-md font-medium text-base text-center mt-4 bg-red-300 text-red-800"
-              Message={errors.url?.message}
+              Message={errors.url?.message || alertMessage}
             />
-          )}
+          ) : null}
           {/* <URL Result /> */}
           {isSuccess && <FormResult longURL={longUrl} shortURL={shortUrl} />}
         </div>
