@@ -65,7 +65,7 @@ const Navbar = (): JSX.Element => {
                 Sign In
               </a>
             </Link>
-            <Link href="/under-construction">
+            <Link href="/sign-up">
               <a className="font-medium text-base md:text-lg lg:text-xl text-indigo-500 hover:text-gray-800">
                 Sign Up
               </a>
