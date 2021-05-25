@@ -1,10 +1,10 @@
 import Link from "next/link"
 import Metadata from "../components/Metadata"
 
-const Custom404Error = () => {
+const NotFoundPage = () => {
   return (
     <>
-      <Metadata title="404 | Page Not Found" />
+      <Metadata title="404 – Page Not Found" />
       <div className="min-h-screen px-4 flex flex-col justify-center items-center text-center bg-gray-100 space-y-5">
         <img
           className="w-1/2 md:w-1/4 lg:w-1/6"
@@ -27,4 +27,4 @@ const Custom404Error = () => {
   )
 }
 
-export default Custom404Error
+export default NotFoundPage
