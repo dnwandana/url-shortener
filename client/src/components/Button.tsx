@@ -1,10 +1,11 @@
-import { MouseEventHandler } from "react"
+import { MouseEventHandler, ReactNode } from "react"
 
 type ButtonProps = {
   ButtonType: "button" | "submit"
   ButtonClick?: MouseEventHandler<HTMLButtonElement>
   ButtonClass: string
   ButtonText: string
+  children?: ReactNode
 }
 
 const Button = ({
@@ -12,11 +13,12 @@ const Button = ({
   ButtonClick,
   ButtonClass,
   ButtonText,
+  children,
 }: ButtonProps): JSX.Element => {
   return (
     <>
       <button type={ButtonType} onClick={ButtonClick} className={ButtonClass}>
-        {ButtonText}
+        {children} {ButtonText}
       </button>
     </>
   )
