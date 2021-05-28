@@ -8,7 +8,7 @@ import Field from "../components/Form/Field"
 import Form from "../components/Form"
 import Link from "next/link"
 import Metadata from "../components/Metadata"
-import Navbar from "../components/Navbar"
+import Navbar from "../layout/public/Navbar"
 import axios from "../axiosInstance"
 import dynamic from "next/dynamic"
 
