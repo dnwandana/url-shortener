@@ -60,7 +60,7 @@ const Navbar = (): JSX.Element => {
         <div
           className={`items-center md:flex ${isMenuOpen ? "block" : "hidden"}`}>
           <div className="flex flex-col md:items-center mt-3 md:mt-0 md:flex-row md:mx-6 space-y-3 space-x-0 md:space-y-0 md:space-x-5">
-            <Link href="/under-construction">
+            <Link href="/sign-in">
               <a className="font-medium text-base md:text-lg lg:text-xl text-gray-800 hover:text-indigo-500">
                 Sign In
               </a>
