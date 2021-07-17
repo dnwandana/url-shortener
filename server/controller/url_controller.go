@@ -1,57 +1,68 @@
-package routes
+package controller
 
 import (
-	"time"
-
+	"github.com/dnwandana/url-shortener/entities"
 	"github.com/dnwandana/url-shortener/middleware"
 	"github.com/dnwandana/url-shortener/models"
 	"github.com/dnwandana/url-shortener/services"
 	"github.com/dnwandana/url-shortener/utils"
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
+	"time"
 )
 
-// Setup endpoint, parameter, middleware, and handler.
-func UrlRoutes(app fiber.Router, service services.UrlService) {
-	app.Get("/", middleware.CookieRequired(), middleware.JWTRequired(), getUrls(service))
-	app.Post("/", addUrl(service))
-	app.Get("/:id", getUrl(service))
-	app.Put("/:id", middleware.CookieRequired(), middleware.JWTRequired(), updateUrl(service))
-	app.Delete("/:id", middleware.CookieRequired(), middleware.JWTRequired(), deleteUrl(service))
+type UrlController struct {
+	UrlService services.UrlService
 }
 
-// getUrls handler which handle request to list all shortUrls belonging to that user.
-func getUrls(service services.UrlService) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+func NewUrlController(urlService *services.UrlService) UrlController {
+	return UrlController{
+		UrlService: *urlService,
+	}
+}
+
+// SetupRoutes Setup endpoint, parameter, middleware, and handler.
+func (controller *UrlController) SetupRoutes (app *fiber.App) {
+	app.Get("/go", middleware.CookieRequired(), middleware.JWTRequired(), controller.List())
+	app.Post("/go", controller.Create())
+	app.Get("/go/:id", controller.Get())
+	app.Put("/go/:id", middleware.CookieRequired(), middleware.JWTRequired(), controller.Update())
+	app.Delete("/go/:id", middleware.CookieRequired(), middleware.JWTRequired(), controller.Remove())
+
+}
+
+// List handler which handle request to list all shortUrls belonging to that user.
+func (controller *UrlController) List() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
 		// getting token from cookies
-		token := c.Locals("user").(*jwt.Token)
+		token := ctx.Locals("user").(*jwt.Token)
 		userID := utils.ExtractIDFromJWT(token)
 		// execute request
-		result, err := service.ListAllShortUrl(userID)
+		result, err := controller.UrlService.List(userID)
 		// check if there is an error
 		if err != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"statusCode": fiber.StatusBadRequest,
 				"error":      err.Error(),
 			})
 		}
 		// return list all shortUrls belonging to that user
-		return c.JSON(fiber.Map{
+		return ctx.JSON(fiber.Map{
 			"statusCode": fiber.StatusOK,
 			"url":        result,
 		})
 	}
 }
 
-// addUrl handler which handle request for creating a new shortUrl.
-func addUrl(service services.UrlService) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+// Create handler which handle request for creating a new shortUrl.
+func (controller *UrlController) Create() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
 		// parse data from request body
-		var data *models.UrlForm
-		parserErr := c.BodyParser(&data)
+		var data *models.UrlData
+		parserErr := ctx.BodyParser(&data)
 		// check if there is an error
 		if parserErr != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"statusCode": fiber.StatusBadRequest,
 				"error":      parserErr.Error(),
 			})
@@ -60,25 +71,25 @@ func addUrl(service services.UrlService) fiber.Handler {
 		validationErr := utils.Validate(data)
 		// check if there is an error
 		if validationErr != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"statusCode": fiber.StatusBadRequest,
 				"error":      validationErr,
 			})
 		}
 		// getting userId from cookies
 		// if there is no userId cookies then the UserID will be set to an empty string
-		userID := c.Cookies("userId")
+		userID := ctx.Cookies("userId")
 		// generate nanoid
 		nanoid, nanoidErr := utils.GenerateNanoID()
 		// check if there is an error
 		if nanoidErr != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"statusCode": fiber.StatusInternalServerError,
 				"error":      nanoidErr.Error(),
 			})
 		}
 		// set data to Url struct
-		url := models.Url{
+		url := entities.Url{
 			UserID:    userID,
 			ID:        nanoid,
 			Title:     data.Title,
@@ -87,10 +98,10 @@ func addUrl(service services.UrlService) fiber.Handler {
 			UpdatedAt: time.Now(),
 		}
 		// execute the request
-		result, dbErr := service.CreateShortUrl(&url)
+		result, dbErr := controller.UrlService.Create(&url)
 		// check if there is an error
 		if dbErr != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"statusCode": fiber.StatusBadRequest,
 				"error":      dbErr.Error(),
 			})
@@ -103,41 +114,41 @@ func addUrl(service services.UrlService) fiber.Handler {
 			CreatedAt: result.CreatedAt,
 			UpdatedAt: result.CreatedAt,
 		}
-		return c.Status(fiber.StatusCreated).JSON(fiber.Map{
+		return ctx.Status(fiber.StatusCreated).JSON(fiber.Map{
 			"statusCode": fiber.StatusCreated,
 			"url":        response,
 		})
 	}
 }
 
-// getUrl handler which handle request for getting to specific URL Resource.
-func getUrl(service services.UrlService) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+// Get handler which handle request for getting to specific URL Resource.
+func (controller *UrlController) Get() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
 		// getting id from request parameter
-		id := c.Params("id")
+		id := ctx.Params("id")
 		// execute the request
-		result, err := service.GetShortUrl(id)
+		result, err := controller.UrlService.Get(id)
 		// check if there is an error
 		if err != nil {
 			// if there is an error, application will send to `/404` endpoint
-			return c.Redirect("/404")
+			return ctx.Redirect("/404")
 		}
 		// if there are no error, application will send to specific URL
-		return c.Redirect(result.URL, fiber.StatusMovedPermanently)
+		return ctx.Redirect(result.URL, fiber.StatusMovedPermanently)
 	}
 }
 
-// updateUrl handler which handle request for updating the existing shortUrl.
-func updateUrl(service services.UrlService) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+// Update handler which handle request for updating the existing shortUrl.
+func (controller *UrlController) Update() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
 		// getting id from request parameter
-		id := c.Params("id")
+		id := ctx.Params("id")
 		// parse data from request body
-		var data *models.UrlForm
-		parserErr := c.BodyParser(&data)
+		var data *models.UrlData
+		parserErr := ctx.BodyParser(&data)
 		// check if there is an error
 		if parserErr != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"statusCode": fiber.StatusBadRequest,
 				"error":      parserErr.Error(),
 			})
@@ -146,32 +157,32 @@ func updateUrl(service services.UrlService) fiber.Handler {
 		validationErr := utils.Validate(data)
 		// check if there is an error
 		if validationErr != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"statusCode": fiber.StatusBadRequest,
 				"error":      validationErr,
 			})
 		}
 		// set new data to Url struct
-		newUrl := models.Url{
+		newUrl := entities.Url{
 			ID:        data.ID,
 			Title:     data.Title,
 			URL:       data.URL,
 			UpdatedAt: time.Now(),
 		}
 		// execute the request
-		result, dbErr := service.UpdateShortUrl(id, &newUrl)
+		result, dbErr := controller.UrlService.Update(id, &newUrl)
 		// check if there is an error
 		if dbErr != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"statusCode": fiber.StatusBadRequest,
 				"error":      dbErr.Error(),
 			})
 		}
 		// get updated data
-		url, urlErr := service.GetShortUrl(data.ID)
+		url, urlErr :=  controller.UrlService.Get(data.ID)
 		// check if there is an error
 		if urlErr != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"statusCode": fiber.StatusBadRequest,
 				"error":      urlErr.Error(),
 			})
@@ -184,27 +195,27 @@ func updateUrl(service services.UrlService) fiber.Handler {
 			CreatedAt: url.CreatedAt,
 			UpdatedAt: result.UpdatedAt,
 		}
-		return c.JSON(fiber.Map{
+		return ctx.JSON(fiber.Map{
 			"statusCode": fiber.StatusOK,
 			"url":        response,
 		})
 	}
 }
 
-// deleteUrl handler which handle reqeuest for deleting the existing shortUrl.
-func deleteUrl(service services.UrlService) fiber.Handler {
-	return func(c *fiber.Ctx) error {
+// Remove handler which handle request for deleting the existing shortUrl.
+func (controller *UrlController) Remove() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
 		// getting id from request parameter
-		id := c.Params("id")
+		id := ctx.Params("id")
 		// execute the request
-		err := service.DeleteShortUrl(id)
+		err := controller.UrlService.Remove(id)
 		// check if there is an error
 		if err != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"statusCode": fiber.StatusBadRequest,
 				"error":      err.Error(),
 			})
 		}
-		return c.SendStatus(fiber.StatusNoContent)
+		return ctx.SendStatus(fiber.StatusOK)
 	}
 }

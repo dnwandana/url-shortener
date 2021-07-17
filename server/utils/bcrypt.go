@@ -13,7 +13,7 @@ func HashPassword(password string) (string, error) {
 	return string(hash), nil
 }
 
-// CompareHashAndPassword compares a bcrypt hashed password with plaintext.
+// VerifyPassword is used to compare a bcrypt hashed password with plaintext.
 // Return true on success, or false on failure.
 func VerifyPassword(hashPwd, plainPwd string) bool {
 	byteHashPwd := []byte(hashPwd)

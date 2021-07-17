@@ -9,7 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// SetCookies return pointer cookie, which can be used to access private routes.
+// SetCookies return pointer cookie, which can be used to access private controller.
 func SetCookies(name, value string) *fiber.Cookie {
 	// get ttl token in hour
 	jwtLife, jwtLifeErr := strconv.Atoi(config.Env("JWT_LIFE"))

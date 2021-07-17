@@ -1,9 +1,8 @@
 package config
 
 import (
-	"os"
-
 	_ "github.com/joho/godotenv/autoload"
+	"os"
 )
 
 // Env retrieves the value of the OS environment variable named by the key.

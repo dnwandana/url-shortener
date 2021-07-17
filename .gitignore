@@ -1,3 +1,4 @@
+.idea
 .next
 .vscode
 dist
@@ -5,3 +6,4 @@ build
 node_modules
 *.env
 .eslintcache
+

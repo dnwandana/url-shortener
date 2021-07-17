@@ -1,14 +1,13 @@
 package main
 
 import (
-	"log"
-
 	"github.com/dnwandana/url-shortener/config"
+	"github.com/dnwandana/url-shortener/controller"
 	"github.com/dnwandana/url-shortener/repository"
-	"github.com/dnwandana/url-shortener/routes"
 	"github.com/dnwandana/url-shortener/services"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"log"
 )
 
 func main() {
@@ -18,28 +17,29 @@ func main() {
 		log.Fatal("=> database error:", dbErr.Error())
 	}
 
-	// setup url collection, instantiate repo, and services
+	// setup url collection, instantiate repository, services, and controller
 	urlCollection := db.Collection(config.Env("URL_COLLECTION"))
-	urlRepo := repository.NewUrlRepository(urlCollection)
-	urlService := services.NewUrlService(urlRepo)
+	urlRepository := repository.NewUrlRepository(urlCollection)
+	urlService := services.NewUrlService(&urlRepository)
+	urlController := controller.NewUrlController(&urlService)
 
-	// setup user collection, instantiate repo, and services
+	// setup user collection, instantiate repository, services, and controller
 	userCollection := db.Collection(config.Env("USER_COLLECTION"))
-	userRepo := repository.NewUserRepository(userCollection)
-	userService := services.NewUserService(userRepo)
+	userRepository := repository.NewUserRepository(userCollection)
+	userService := services.NewUserService(&userRepository)
+	userController := controller.NewUserController(&userService)
 
-	// instantitate fiber application
+	// instantiate fiber application
 	app := fiber.New()
+
+	// setup controller
+	urlController.SetupRoutes(app)
+	userController.SetupRoutes(app)
 
 	// register cors middleware and allow browser expose credentials
 	app.Use(cors.New(cors.Config{
 		AllowCredentials: true,
 	}))
-
-	// setup userService and urlService into `/go` endpoint
-	apiRoute := app.Group("/go")
-	routes.UserRoutes(apiRoute, userService)
-	routes.UrlRoutes(apiRoute, urlService)
 
 	// listen to port `:5000` and log any errors
 	log.Fatal(app.Listen(":5000"))
