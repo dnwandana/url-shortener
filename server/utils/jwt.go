@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"github.com/dnwandana/url-shortener/entities"
+	"github.com/dnwandana/url-shortener/entity"
 	"log"
 	"strconv"
 	"time"
@@ -11,7 +11,7 @@ import (
 )
 
 // GenerateJWT return string JWT Token, which can be used to access private controller.
-func GenerateJWT(user *entities.User) (string, error) {
+func GenerateJWT(user *entity.User) (string, error) {
 	// get ttl token in hour
 	jwtLife, jwtLifeErr := strconv.Atoi(config.Env("JWT_LIFE"))
 	// check if there is an error

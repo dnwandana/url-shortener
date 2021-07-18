@@ -1,7 +1,7 @@
 package services
 
 import (
-	"github.com/dnwandana/url-shortener/entities"
+	"github.com/dnwandana/url-shortener/entity"
 	"github.com/dnwandana/url-shortener/repository"
 )
 
@@ -15,10 +15,10 @@ func NewUserService(r *repository.UserRepository) UserService {
 	}
 }
 
-func (s *userService) Create(user *entities.User) (*entities.User, error) {
+func (s *userService) Create(user *entity.User) (*entity.User, error) {
 	return s.userRepository.Insert(user)
 }
 
-func (s *userService) FindByEmail(email string) (*entities.User, error) {
+func (s *userService) FindByEmail(email string) (*entity.User, error) {
 	return s.userRepository.FindByEmail(email)
 }

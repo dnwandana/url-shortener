@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/dnwandana/url-shortener/entities"
+	"github.com/dnwandana/url-shortener/entity"
 	"github.com/dnwandana/url-shortener/models"
 	"github.com/dnwandana/url-shortener/services"
 	"github.com/dnwandana/url-shortener/utils"
@@ -66,7 +66,7 @@ func (controller *UserController) signUp() fiber.Handler {
 			})
 		}
 		// set data to User struct
-		user := entities.User{
+		user := entity.User{
 			Fullname:  data.Fullname,
 			Email:     data.Email,
 			Password:  hashedPassword,

@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/dnwandana/url-shortener/entities"
+	"github.com/dnwandana/url-shortener/entity"
 	"github.com/dnwandana/url-shortener/middleware"
 	"github.com/dnwandana/url-shortener/models"
 	"github.com/dnwandana/url-shortener/services"
@@ -89,7 +89,7 @@ func (controller *UrlController) Create() fiber.Handler {
 			})
 		}
 		// set data to Url struct
-		url := entities.Url{
+		url := entity.Url{
 			UserID:    userID,
 			ID:        nanoid,
 			Title:     data.Title,
@@ -163,7 +163,7 @@ func (controller *UrlController) Update() fiber.Handler {
 			})
 		}
 		// set new data to Url struct
-		newUrl := entities.Url{
+		newUrl := entity.Url{
 			ID:        data.ID,
 			Title:     data.Title,
 			URL:       data.URL,

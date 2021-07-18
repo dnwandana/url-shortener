@@ -1,13 +1,13 @@
 package repository
 
 import (
-	"github.com/dnwandana/url-shortener/entities"
+	"github.com/dnwandana/url-shortener/entity"
 )
 
 type UserRepository interface {
 	// Insert method is used to create a new users.
-	Insert(user *entities.User) (*entities.User, error)
+	Insert(user *entity.User) (*entity.User, error)
 
 	// FindByEmail method is used to get a specific user.
-	FindByEmail(email string) (*entities.User, error)
+	FindByEmail(email string) (*entity.User, error)
 }

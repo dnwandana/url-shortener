@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"github.com/dnwandana/url-shortener/entities"
+	"github.com/dnwandana/url-shortener/entity"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -18,7 +18,7 @@ func NewUserRepository(collection *mongo.Collection) UserRepository {
 	}
 }
 
-func (r *UserRepositoryImpl) Insert(user *entities.User) (*entities.User, error) {
+func (r *UserRepositoryImpl) Insert(user *entity.User) (*entity.User, error) {
 	user.ID = primitive.NewObjectID()
 	_, err := r.Collection.InsertOne(context.Background(), user)
 	if err != nil {
@@ -27,8 +27,8 @@ func (r *UserRepositoryImpl) Insert(user *entities.User) (*entities.User, error)
 	return user, nil
 }
 
-func (r *UserRepositoryImpl) FindByEmail(email string) (*entities.User, error) {
-	var user *entities.User
+func (r *UserRepositoryImpl) FindByEmail(email string) (*entity.User, error) {
+	var user *entity.User
 	filter := bson.M{
 		"email": email,
 	}

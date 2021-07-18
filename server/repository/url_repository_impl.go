@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
-	"github.com/dnwandana/url-shortener/entities"
+	"github.com/dnwandana/url-shortener/entity"
 	"github.com/dnwandana/url-shortener/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -41,7 +41,7 @@ func (r *urlRepositoryImpl) FindAll(userID string) (*[]models.UrlResponse, error
 	return &urls, nil
 }
 
-func (r *urlRepositoryImpl) Insert(url *entities.Url) (*entities.Url, error) {
+func (r *urlRepositoryImpl) Insert(url *entity.Url) (*entity.Url, error) {
 	url.ObjectID = primitive.NewObjectID()
 	_, err := r.Collection.InsertOne(context.Background(), url)
 	if err != nil {
@@ -50,8 +50,8 @@ func (r *urlRepositoryImpl) Insert(url *entities.Url) (*entities.Url, error) {
 	return url, nil
 }
 
-func (r *urlRepositoryImpl) FindById(id string) (*entities.Url, error) {
-	var url *entities.Url
+func (r *urlRepositoryImpl) FindById(id string) (*entity.Url, error) {
+	var url *entity.Url
 	err := r.Collection.FindOne(context.Background(), bson.M{"id": id}).Decode(&url)
 	if err != nil {
 		return nil, err
@@ -59,7 +59,7 @@ func (r *urlRepositoryImpl) FindById(id string) (*entities.Url, error) {
 	return url, nil
 }
 
-func (r *urlRepositoryImpl) Update(id string, url *entities.Url) (*entities.Url, error) {
+func (r *urlRepositoryImpl) Update(id string, url *entity.Url) (*entity.Url, error) {
 	filter := bson.M{"id": id}
 	update := bson.D{
 		{
