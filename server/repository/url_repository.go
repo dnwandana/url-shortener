@@ -2,12 +2,12 @@ package repository
 
 import (
 	"github.com/dnwandana/url-shortener/entity"
-	"github.com/dnwandana/url-shortener/models"
+	"github.com/dnwandana/url-shortener/model"
 )
 
 type UrlRepository interface {
 	// FindAll method which returns all shortUrls belonging to that user.
-	FindAll(userID string) (*[]models.UrlResponse, error)
+	FindAll(userID string) (*[]model.UrlResponse, error)
 
 	// Insert method is used to create a new shortUrl.
 	Insert(url *entity.Url) (*entity.Url, error)

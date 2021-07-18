@@ -2,12 +2,12 @@ package services
 
 import (
 	"github.com/dnwandana/url-shortener/entity"
-	"github.com/dnwandana/url-shortener/models"
+	"github.com/dnwandana/url-shortener/model"
 )
 
 type UrlService interface {
 	// List method which returns all shortUrls belonging to that user.
-	List(userID string) (*[]models.UrlResponse, error)
+	List(userID string) (*[]model.UrlResponse, error)
 
 	// Create method is used to create a new shortUrl.
 	Create(url *entity.Url) (*entity.Url, error)

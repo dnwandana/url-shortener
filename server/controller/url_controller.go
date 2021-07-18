@@ -3,7 +3,7 @@ package controller
 import (
 	"github.com/dnwandana/url-shortener/entity"
 	"github.com/dnwandana/url-shortener/middleware"
-	"github.com/dnwandana/url-shortener/models"
+	"github.com/dnwandana/url-shortener/model"
 	"github.com/dnwandana/url-shortener/services"
 	"github.com/dnwandana/url-shortener/utils"
 	"github.com/form3tech-oss/jwt-go"
@@ -58,7 +58,7 @@ func (controller *UrlController) List() fiber.Handler {
 func (controller *UrlController) Create() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		// parse data from request body
-		var data *models.UrlData
+		var data *model.UrlData
 		parserErr := ctx.BodyParser(&data)
 		// check if there is an error
 		if parserErr != nil {
@@ -107,7 +107,7 @@ func (controller *UrlController) Create() fiber.Handler {
 			})
 		}
 		// send another struct for JSON response
-		response := models.UrlResponse{
+		response := model.UrlResponse{
 			ID:        result.ID,
 			Title:     result.Title,
 			URL:       result.URL,
@@ -144,7 +144,7 @@ func (controller *UrlController) Update() fiber.Handler {
 		// getting id from request parameter
 		id := ctx.Params("id")
 		// parse data from request body
-		var data *models.UrlData
+		var data *model.UrlData
 		parserErr := ctx.BodyParser(&data)
 		// check if there is an error
 		if parserErr != nil {
@@ -188,7 +188,7 @@ func (controller *UrlController) Update() fiber.Handler {
 			})
 		}
 		// send another struct for JSON response
-		response := models.UrlResponse{
+		response := model.UrlResponse{
 			ID:        result.ID,
 			Title:     result.Title,
 			URL:       result.URL,

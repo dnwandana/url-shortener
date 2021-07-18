@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/dnwandana/url-shortener/entity"
-	"github.com/dnwandana/url-shortener/models"
+	"github.com/dnwandana/url-shortener/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -21,8 +21,8 @@ func NewUrlRepository(collection *mongo.Collection) UrlRepository {
 	}
 }
 
-func (r *urlRepositoryImpl) FindAll(userID string) (*[]models.UrlResponse, error) {
-	var urls []models.UrlResponse
+func (r *urlRepositoryImpl) FindAll(userID string) (*[]model.UrlResponse, error) {
+	var urls []model.UrlResponse
 	filter := bson.M{
 		"userId": userID,
 	}
@@ -31,7 +31,7 @@ func (r *urlRepositoryImpl) FindAll(userID string) (*[]models.UrlResponse, error
 		return nil, err
 	}
 	for cursor.Next(context.TODO()) {
-		var url models.UrlResponse
+		var url model.UrlResponse
 		err = cursor.Decode(&url)
 		if err != nil {
 			return nil, err

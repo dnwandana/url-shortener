@@ -2,7 +2,7 @@ package controller
 
 import (
 	"github.com/dnwandana/url-shortener/entity"
-	"github.com/dnwandana/url-shortener/models"
+	"github.com/dnwandana/url-shortener/model"
 	"github.com/dnwandana/url-shortener/services"
 	"github.com/dnwandana/url-shortener/utils"
 	"github.com/gofiber/fiber/v2"
@@ -29,7 +29,7 @@ func (controller *UserController) SetupRoutes(app *fiber.App) {
 func (controller *UserController) signUp() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		// parse data from request body
-		var data *models.UserSignUp
+		var data *model.UserSignUp
 		parserErr := ctx.BodyParser(&data)
 		// check if there is an error
 		if parserErr != nil {
@@ -83,7 +83,7 @@ func (controller *UserController) signUp() fiber.Handler {
 			})
 		}
 		// send another struct for JSON response
-		response := models.UserSignUpResponse{
+		response := model.UserSignUpResponse{
 			ID:       result.ID,
 			Fullname: result.Fullname,
 		}
@@ -98,7 +98,7 @@ func (controller *UserController) signUp() fiber.Handler {
 func (controller *UserController) signIn() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		// parse data from request body
-		var data *models.UserSignIn
+		var data *model.UserSignIn
 		parserErr := ctx.BodyParser(&data)
 		// check if there is an error
 		if parserErr != nil {

@@ -2,7 +2,7 @@ package services
 
 import (
 	"github.com/dnwandana/url-shortener/entity"
-	"github.com/dnwandana/url-shortener/models"
+	"github.com/dnwandana/url-shortener/model"
 	"github.com/dnwandana/url-shortener/repository"
 )
 
@@ -16,7 +16,7 @@ func NewUrlService(r *repository.UrlRepository) UrlService {
 	}
 }
 
-func (s *urlServiceImpl) List(userID string) (*[]models.UrlResponse, error) {
+func (s *urlServiceImpl) List(userID string) (*[]model.UrlResponse, error) {
 	return s.urlRepository.FindAll(userID)
 }
 
