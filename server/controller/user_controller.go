@@ -4,7 +4,7 @@ import (
 	"github.com/dnwandana/url-shortener/entity"
 	"github.com/dnwandana/url-shortener/model"
 	"github.com/dnwandana/url-shortener/service"
-	"github.com/dnwandana/url-shortener/utils"
+	"github.com/dnwandana/url-shortener/util"
 	"github.com/gofiber/fiber/v2"
 	"time"
 )
@@ -39,7 +39,7 @@ func (controller *UserController) signUp() fiber.Handler {
 			})
 		}
 		// validate the request body
-		validationErr := utils.Validate(data)
+		validationErr := util.Validate(data)
 		// check if there is an error
 		if validationErr != nil {
 			return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -57,7 +57,7 @@ func (controller *UserController) signUp() fiber.Handler {
 			})
 		}
 		// password encryption
-		hashedPassword, hashErr := utils.HashPassword(data.Password)
+		hashedPassword, hashErr := util.HashPassword(data.Password)
 		// check if there is an error
 		if hashErr != nil {
 			return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -108,7 +108,7 @@ func (controller *UserController) signIn() fiber.Handler {
 			})
 		}
 		// validate the request body
-		validationErr := utils.Validate(data)
+		validationErr := util.Validate(data)
 		// check if there is an error
 		if validationErr != nil {
 			return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -126,7 +126,7 @@ func (controller *UserController) signIn() fiber.Handler {
 			})
 		}
 		// compare if the given password is the same as the user password from the database
-		isPasswordMatch := utils.VerifyPassword(user.Password, data.Password)
+		isPasswordMatch := util.VerifyPassword(user.Password, data.Password)
 		// send an error if the provided password are not the same
 		if !isPasswordMatch {
 			return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -135,7 +135,7 @@ func (controller *UserController) signIn() fiber.Handler {
 			})
 		}
 		// generate JWT Token
-		token, tokenErr := utils.GenerateJWT(user)
+		token, tokenErr := util.GenerateJWT(user)
 		// check if there is an error
 		if tokenErr != nil {
 			return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -144,8 +144,8 @@ func (controller *UserController) signIn() fiber.Handler {
 			})
 		}
 		// set cookies
-		userIdCookie := utils.SetCookies("userId", user.ID.Hex())
-		jwtCookie := utils.SetCookies("token", token)
+		userIdCookie := util.SetCookies("userId", user.ID.Hex())
+		jwtCookie := util.SetCookies("token", token)
 		ctx.Cookie(userIdCookie)
 		ctx.Cookie(jwtCookie)
 		return ctx.SendStatus(fiber.StatusOK)

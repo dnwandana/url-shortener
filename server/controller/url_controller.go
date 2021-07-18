@@ -5,7 +5,7 @@ import (
 	"github.com/dnwandana/url-shortener/middleware"
 	"github.com/dnwandana/url-shortener/model"
 	"github.com/dnwandana/url-shortener/service"
-	"github.com/dnwandana/url-shortener/utils"
+	"github.com/dnwandana/url-shortener/util"
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
 	"time"
@@ -36,7 +36,7 @@ func (controller *UrlController) List() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		// getting token from cookies
 		token := ctx.Locals("user").(*jwt.Token)
-		userID := utils.ExtractIDFromJWT(token)
+		userID := util.ExtractIDFromJWT(token)
 		// execute request
 		result, err := controller.UrlService.List(userID)
 		// check if there is an error
@@ -68,7 +68,7 @@ func (controller *UrlController) Create() fiber.Handler {
 			})
 		}
 		// validate the request body
-		validationErr := utils.Validate(data)
+		validationErr := util.Validate(data)
 		// check if there is an error
 		if validationErr != nil {
 			return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -80,7 +80,7 @@ func (controller *UrlController) Create() fiber.Handler {
 		// if there is no userId cookies then the UserID will be set to an empty string
 		userID := ctx.Cookies("userId")
 		// generate nanoid
-		nanoid, nanoidErr := utils.GenerateNanoID()
+		nanoid, nanoidErr := util.GenerateNanoID()
 		// check if there is an error
 		if nanoidErr != nil {
 			return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -154,7 +154,7 @@ func (controller *UrlController) Update() fiber.Handler {
 			})
 		}
 		// validate the request body
-		validationErr := utils.Validate(data)
+		validationErr := util.Validate(data)
 		// check if there is an error
 		if validationErr != nil {
 			return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
