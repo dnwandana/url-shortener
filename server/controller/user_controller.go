@@ -3,17 +3,17 @@ package controller
 import (
 	"github.com/dnwandana/url-shortener/entity"
 	"github.com/dnwandana/url-shortener/model"
-	"github.com/dnwandana/url-shortener/services"
+	"github.com/dnwandana/url-shortener/service"
 	"github.com/dnwandana/url-shortener/utils"
 	"github.com/gofiber/fiber/v2"
 	"time"
 )
 
 type UserController struct {
-	UserService services.UserService
+	UserService service.UserService
 }
 
-func NewUserController(userService *services.UserService) UserController {
+func NewUserController(userService *service.UserService) UserController {
 	return UserController{
 		UserService: *userService,
 	}

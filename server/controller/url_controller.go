@@ -4,7 +4,7 @@ import (
 	"github.com/dnwandana/url-shortener/entity"
 	"github.com/dnwandana/url-shortener/middleware"
 	"github.com/dnwandana/url-shortener/model"
-	"github.com/dnwandana/url-shortener/services"
+	"github.com/dnwandana/url-shortener/service"
 	"github.com/dnwandana/url-shortener/utils"
 	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
@@ -12,10 +12,10 @@ import (
 )
 
 type UrlController struct {
-	UrlService services.UrlService
+	UrlService service.UrlService
 }
 
-func NewUrlController(urlService *services.UrlService) UrlController {
+func NewUrlController(urlService *service.UrlService) UrlController {
 	return UrlController{
 		UrlService: *urlService,
 	}

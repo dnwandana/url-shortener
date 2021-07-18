@@ -4,7 +4,7 @@ import (
 	"github.com/dnwandana/url-shortener/config"
 	"github.com/dnwandana/url-shortener/controller"
 	"github.com/dnwandana/url-shortener/repository"
-	"github.com/dnwandana/url-shortener/services"
+	"github.com/dnwandana/url-shortener/service"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"log"
@@ -17,16 +17,16 @@ func main() {
 		log.Fatal("=> database error:", dbErr.Error())
 	}
 
-	// setup url collection, instantiate repository, services, and controller
+	// setup url collection, instantiate repository, service, and controller
 	urlCollection := db.Collection(config.Env("URL_COLLECTION"))
 	urlRepository := repository.NewUrlRepository(urlCollection)
-	urlService := services.NewUrlService(&urlRepository)
+	urlService := service.NewUrlService(&urlRepository)
 	urlController := controller.NewUrlController(&urlService)
 
-	// setup user collection, instantiate repository, services, and controller
+	// setup user collection, instantiate repository, service, and controller
 	userCollection := db.Collection(config.Env("USER_COLLECTION"))
 	userRepository := repository.NewUserRepository(userCollection)
-	userService := services.NewUserService(&userRepository)
+	userService := service.NewUserService(&userRepository)
 	userController := controller.NewUserController(&userService)
 
 	// instantiate fiber application
