@@ -2,11 +2,19 @@ package service
 
 import (
 	"github.com/dnwandana/url-shortener/entity"
+	"github.com/dnwandana/url-shortener/model"
 )
 
 type UserService interface {
-	// Create method is used to create a new users.
-	Create(user *entity.User) (*entity.User, error)
+	// Create method is used to create a new account.
+	Create(request *model.UserSignUp)
+
+	// Login method is used to get JWT Token
+	Login(request *model.UserSignIn) (*entity.User, string)
+
 	// FindByEmail method is used to get a specific user.
-	FindByEmail(email string) (*entity.User, error)
+	FindByEmail(email string) *entity.User
+
+	// FetchData method is used to get user information
+	FetchData(userID string) *model.UserInformation
 }
