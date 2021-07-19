@@ -1,9 +1,5 @@
 package model
 
-import (
-	"go.mongodb.org/mongo-driver/bson/primitive"
-)
-
 // UserSignIn struct represents form data when trying to sign-in.
 type UserSignIn struct {
 	Email    string `json:"email" validate:"required,email"`
@@ -18,8 +14,8 @@ type UserSignUp struct {
 	ConfirmationPassword string `json:"confirmationPassword" validate:"required,min=6,eqfield=Password"`
 }
 
-// UserSignUpResponse struct represents the JSON response that the user will see after sign-up.
-type UserSignUpResponse struct {
-	ID       primitive.ObjectID `json:"id"`
-	Fullname string             `json:"fullname"`
+// UserInformation struct represents user information data.
+type UserInformation struct {
+	Fullname string `json:"fullname"`
+	Email    string `json:"email"`
 }
