@@ -18,7 +18,7 @@ func GenerateJWT(user *entity.User) (string, error) {
 	if jwtLifeErr != nil {
 		log.Fatal("=> jwtLifeErr error:", jwtLifeErr)
 	}
-	// sign token with signin algorithms HS256
+	// sign token with signing algorithms HS256
 	data := jwt.New(jwt.SigningMethodHS256)
 	// setting token payload
 	claims := data.Claims.(jwt.MapClaims)

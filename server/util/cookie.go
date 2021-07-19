@@ -13,7 +13,7 @@ import (
 func SetCookies(name, value string) *fiber.Cookie {
 	// get ttl token in hour
 	jwtLife, jwtLifeErr := strconv.Atoi(config.Env("JWT_LIFE"))
-	// check if there is an errror
+	// check if there is an error
 	if jwtLifeErr != nil {
 		log.Fatal("=> jwtLifeErr error:", jwtLifeErr)
 	}
