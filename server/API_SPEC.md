@@ -5,8 +5,8 @@
 - Method: `POST`
 - Endpoint: `/go/sign-up`
 - Headers:
-  - Content-Type: application/json
-  - Accept: application/json
+    - Content-Type: application/json
+    - Accept: application/json
 - Body:
   ```json
   {
@@ -47,8 +47,8 @@ Error Response:
 - Method: `POST`
 - Endpoint: `/go/sign-in`
 - Headers:
-  - Content-Type: application/json
-  - Accept: application/json
+    - Content-Type: application/json
+    - Accept: application/json
 - Body:
   ```json
   {
@@ -61,10 +61,9 @@ Success Response:
 
 - Http status code: `200`
 - Headers:
-  - userId Cookie
-  - JWT Cookie
-- Body:
-  `OK`
+    - userId Cookie
+    - JWT Cookie
+- Body: `OK`
 
 Error Response:
 
@@ -84,9 +83,9 @@ Request:
 - Method: `GET`
 - Endpoint: `/go`
 - Headers:
-  - userId Cookie
-  - JWT Cookie
-  - Accept: application/json
+    - userId Cookie
+    - JWT Cookie
+    - Accept: application/json
 
 Success Response:
 
@@ -95,14 +94,14 @@ Success Response:
   ```json
   {
     "statusCode": "integer",
-    "url": [
-      {
-        "id": "string",
-        "title": "string",
-        "url": "string",
-        "createdAt": "datetime",
-        "updatedAt": "datetime"
-      }
+    "data": [
+        {
+            "id": "string",
+            "title": "string",
+            "url": "string",
+            "createdAt": "datetime",
+            "updatedAt": "datetime"
+        }
     ]
   }
   ```
@@ -113,8 +112,8 @@ Error Response:
 - Body:
   ```json
   {
-    "statusCode": "integer",
-    "error": "string"
+      "statusCode": "integer",
+      "error": "string"
   }
   ```
 
@@ -125,16 +124,16 @@ Request:
 - Method: `POST`
 - Endpoint: `/go`
 - Headers:
-  - userId Cookie (Optional)
-  - JWT Cookie (Optional)
-  - Content-Type: application/json
-  - Accept: application/json
+    - userId Cookie (Optional)
+    - JWT Cookie (Optional)
+    - Content-Type: application/json
+    - Accept: application/json
 - Body:
   ```json
   {
-    "id": "optional string",
-    "title": "optional string",
-    "url": "string"
+      "id": "optional string",
+      "title": "optional string",
+      "url": "string"
   }
   ```
 
@@ -144,14 +143,14 @@ Success Response:
 - Body:
   ```json
   {
-    "statusCode": "integer",
-    "url": {
-      "id": "string",
-      "title": "string",
-      "url": "string",
-      "createdAt": "datetime",
-      "updatedAt": "datetime"
-    }
+      "statusCode": "integer",
+      "data": {
+          "id": "string",
+          "title": "string",
+          "url": "string",
+          "createdAt": "datetime",
+          "updatedAt": "datetime"
+      }
   }
   ```
 
@@ -161,8 +160,8 @@ Error Response:
 - Body:
   ```json
   {
-    "statusCode": "integer",
-    "error": "string"
+      "statusCode": "integer",
+      "error": "string"
   }
   ```
 
@@ -188,16 +187,16 @@ Request:
 - Method: `PUT`
 - Endpoint: `/go/{id}`
 - Headers:
-  - userId Cookie
-  - JWT Cookie
-  - Content-Type: application/json
-  - Accept: application/json
+    - userId Cookie
+    - JWT Cookie
+    - Content-Type: application/json
+    - Accept: application/json
 - Body:
   ```json
   {
-    "id": "string",
-    "title": "string",
-    "url": "string"
+      "id": "string",
+      "title": "string",
+      "url": "string"
   }
   ```
 
@@ -207,14 +206,14 @@ Success Response:
 - Body:
   ```json
   {
-    "statusCode": "integer",
-    "url": {
-      "id": "string",
-      "title": "string",
-      "url": "string",
-      "createdAt": "datetime",
-      "updatedAt": "datetime"
-    }
+      "statusCode": "integer",
+      "data": {
+          "id": "string",
+          "title": "string",
+          "url": "string",
+          "createdAt": "datetime",
+          "updatedAt": "datetime"
+      }
   }
   ```
 
@@ -224,8 +223,8 @@ Error Response:
 - Body:
   ```json
   {
-    "statusCode": "integer",
-    "error": "string"
+      "statusCode": "integer",
+      "error": "string"
   }
   ```
 
@@ -236,12 +235,13 @@ Request:
 - Method: `DELETE`
 - Endpoint: `/go/{id}`
 - Headers:
-  - userId Cookie
-  - JWT Cookie
+    - userId Cookie
+    - JWT Cookie
 
 Success Response:
 
-- Http status code: `204`
+- Http status code: `200`
+- Body: `OK`
 
 Error Response:
 
@@ -249,7 +249,7 @@ Error Response:
 - Body:
   ```json
   {
-    "statusCode": "integer",
-    "error": "string"
+      "statusCode": "integer",
+      "error": "string"
   }
   ```
