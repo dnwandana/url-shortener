@@ -9,32 +9,33 @@ import (
 )
 
 var (
-	uni      *ut.UniversalTranslator
-	validate *validator.Validate
+	universalTranslator *ut.UniversalTranslator
+	validate            *validator.Validate
 )
 
-// Validate struct, returns slice of string error.
-func Validate(object interface{}) []string {
+// Validate struct level.
+func Validate(object interface{}) interface{} {
 	// declare universal-translator
-	en := en.New()
-	uni = ut.New(en, en)
-	trans, _ := uni.GetTranslator("en")
+	enTranslate := en.New()
+	universalTranslator = ut.New(enTranslate, enTranslate)
+	trans, _ := universalTranslator.GetTranslator("en_translator")
+
 	// new validator instance
 	validate = validator.New()
 	// register translator
-	en_translations.RegisterDefaultTranslations(validate, trans)
+	errTranslation := en_translations.RegisterDefaultTranslations(validate, trans)
+	if errTranslation != nil {
+		return errTranslation.Error()
+	}
 
 	// validate Struct level
 	validationErr := validate.Struct(object)
 	// if there is an error
-	// returns slice of string error
 	if validationErr != nil {
-		var errors []string
 		for _, err := range validationErr.(validator.ValidationErrors) {
-			translatedErr := fmt.Sprint(err.Translate(trans))
-			errors = append(errors, translatedErr)
+			translatedErr := fmt.Sprintf(err.Translate(trans))
+			return translatedErr
 		}
-		return errors
 	}
 	return nil
 }

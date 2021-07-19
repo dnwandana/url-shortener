@@ -3,10 +3,12 @@ package main
 import (
 	"github.com/dnwandana/url-shortener/config"
 	"github.com/dnwandana/url-shortener/controller"
+	"github.com/dnwandana/url-shortener/model"
 	"github.com/dnwandana/url-shortener/repository"
 	"github.com/dnwandana/url-shortener/service"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 	"log"
 )
 
@@ -30,7 +32,22 @@ func main() {
 	userController := controller.NewUserController(&userService)
 
 	// instantiate fiber application
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		// Override default error handler
+		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
+			// Send custom error page
+			if err != nil {
+				// In case the SendFile fails
+				return ctx.Status(fiber.StatusBadRequest).JSON(model.ErrorResponse{
+					StatusCode: fiber.StatusBadRequest,
+					Error:      err.Error(),
+				})
+			}
+			// Return from handler
+			return nil
+		},
+	})
+	app.Use(recover.New())
 
 	// setup controller
 	urlController.SetupRoutes(app)
