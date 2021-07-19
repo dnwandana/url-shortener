@@ -45,7 +45,7 @@ go build main.go
 
 1.  Build docker image
     ```bash
-    docker build -t url-server:1.0.1 .
+    docker build -t url-server:1.0.2 .
     ```
 2.  Run docker image
     ```bash
@@ -61,7 +61,7 @@ go build main.go
     -e JWT_SECRET=SECRET \
     -e JWT_LIFE=6 \
     -e STAGE=DEVELOPMENT \
-    url-server:1.0.1
+    url-server:1.0.2
     ```
 
 ## Learn More
