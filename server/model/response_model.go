@@ -9,5 +9,5 @@ type SuccessResponse struct {
 // ErrorResponse is a JSON struct representing a failed request
 type ErrorResponse struct {
 	StatusCode int         `json:"statusCode"`
-	Error      interface{} `json:"data"`
+	Error      interface{} `json:"error"`
 }
