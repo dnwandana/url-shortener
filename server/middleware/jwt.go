@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"github.com/dnwandana/url-shortener/config"
+	"github.com/dnwandana/url-shortener/model"
 	"github.com/gofiber/fiber/v2"
 	jwt "github.com/gofiber/jwt/v2"
 )
@@ -19,14 +20,14 @@ func JWTRequired() fiber.Handler {
 func jwtErrorHandler(ctx *fiber.Ctx, err error) error {
 	if err.Error() == "Missing or malformed JWT" {
 		// error handler if the request does not have a JWT Token
-		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"statusCode": fiber.StatusUnauthorized,
-			"error":      "missing or malformed JWT",
+		return ctx.Status(fiber.StatusUnauthorized).JSON(model.ErrorResponse{
+			StatusCode: fiber.StatusUnauthorized,
+			Error:      "Missing or Malformed JWT",
 		})
 	}
 	// error handler if the JWT Token invalid or has expired
-	return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-		"statusCode": fiber.StatusUnauthorized,
-		"error":      "invalid or expired JWT",
+	return ctx.Status(fiber.StatusUnauthorized).JSON(model.ErrorResponse{
+		StatusCode: fiber.StatusUnauthorized,
+		Error:      "Invalid or Expired JWT",
 	})
 }
