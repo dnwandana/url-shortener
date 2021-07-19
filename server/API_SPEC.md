@@ -3,33 +3,24 @@
 ## User Sign Up
 
 - Method: `POST`
-- Endpoint: `/go/sign-up`
+- Endpoint: `/account/sign-up`
 - Headers:
     - Content-Type: application/json
     - Accept: application/json
 - Body:
   ```json
   {
-    "fullname": "string",
-    "email": "string",
-    "password": "string",
-    "confirmationPassword": "string"
+      "fullname": "string",
+      "email": "string",
+      "password": "string",
+      "confirmationPassword": "string"
   }
   ```
 
 Success Response:
 
 - Http status code: `201`
-- Body:
-  ```json
-  {
-    "statusCode": "integer",
-    "user": {
-      "id": "string",
-      "fullname": "string"
-    }
-  }
-  ```
+- Body: `Created`
 
 Error Response:
 
@@ -37,23 +28,23 @@ Error Response:
 - Body:
   ```json
   {
-    "statusCode": "integer",
-    "error": ["string"]
+      "statusCode": "integer",
+      "error": "string"
   }
   ```
 
 ## User Sign In
 
 - Method: `POST`
-- Endpoint: `/go/sign-in`
+- Endpoint: `/account/sign-in`
 - Headers:
     - Content-Type: application/json
     - Accept: application/json
 - Body:
   ```json
   {
-    "email": "string",
-    "password": "string"
+      "email": "string",
+      "password": "string"
   }
   ```
 
@@ -71,8 +62,40 @@ Error Response:
 - Body:
   ```json
   {
-    "statusCode": "integer",
-    "error": ["string"]
+      "statusCode": "integer",
+      "error": "string"
+  }
+  ```
+
+## Fetch User Information
+
+- Method: `GET`
+- Endpoint: `/account`
+- Headers:
+    - Accept: application/json
+
+Success Response:
+
+- Http status code: `200`
+- Body:
+  ```json
+  {
+      "statusCode": "integer",
+      "data": {
+          "fullname": "string",
+          "email": "string"
+      }
+  }
+  ```
+
+Error Response:
+
+- Http status code: `401`
+- Body:
+  ```json
+  {
+      "statusCode": "integer",
+      "error": "string"
   }
   ```
 
