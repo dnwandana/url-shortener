@@ -12,9 +12,6 @@ type UserService interface {
 	// Login method is used to get JWT Token
 	Login(request *model.UserSignIn) (*entity.User, string)
 
-	// FindByEmail method is used to get a specific user.
-	FindByEmail(email string) *entity.User
-
 	// FetchData method is used to get user information
 	FetchData(userID string) *model.UserInformation
 }

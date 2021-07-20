@@ -26,7 +26,9 @@ func (s *userService) Create(request *model.UserSignUp) {
 	util.ReturnErrorIfNeeded(validationErr)
 
 	// check if the email is already registered
-	isEmailExist := s.FindByEmail(request.Email)
+	// ignoring if there is an error
+	isEmailExist, _ := s.userRepository.FindByEmail(request.Email)
+
 	// if the email is already registered send a JSON error
 	if isEmailExist != nil {
 		util.ReturnErrorIfNeeded("Email Already Exist")
@@ -59,7 +61,11 @@ func (s *userService) Login(request *model.UserSignIn) (*entity.User, string) {
 	util.ReturnErrorIfNeeded(validationErr)
 
 	// check if the user exist with the given email
-	user := s.FindByEmail(request.Email)
+	user, notFound := s.userRepository.FindByEmail(request.Email)
+	// if no user found with the given email
+	if notFound != nil {
+		util.ReturnErrorIfNeeded("No User Exist")
+	}
 
 	// compare if the given password is the same as the user password from the database
 	isPasswordMatch := util.VerifyPassword(user.Password, request.Password)
@@ -74,18 +80,6 @@ func (s *userService) Login(request *model.UserSignIn) (*entity.User, string) {
 	util.ReturnErrorIfNeeded(tokenErr)
 	// return token
 	return user, token
-}
-
-func (s *userService) FindByEmail(email string) *entity.User {
-	// execute the request
-	user, notFound := s.userRepository.FindByEmail(email)
-	// check if there is an error
-	if notFound != nil {
-		util.ReturnErrorIfNeeded("No User Exist")
-	}
-
-	// if there are no error, return user
-	return user
 }
 
 func (s *userService) FetchData(userID string) *model.UserInformation {
