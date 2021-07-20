@@ -1,5 +1,6 @@
 import * as yup from "yup"
 import { AxiosError, AxiosResponse } from "axios"
+import { ErrorResponse, SuccessResponse } from "../APIResponse"
 import { useRef, useState } from "react"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
@@ -17,18 +18,6 @@ const FormResult = dynamic(() => import("../components/Form/Result"))
 
 type FormInput = {
   url: string
-}
-
-type ApiResponse = {
-  statusCode: number
-  url: {
-    id: string
-    title: string
-    url: string
-    createdAt: string
-    updatedAt: string
-  }
-  error: string
 }
 
 const Homepage = () => {
@@ -49,15 +38,15 @@ const Homepage = () => {
 
   const onSubmit = async (url: FormInput) => {
     try {
-      const domain = process.env.NEXT_PUBLIC_API_ENDPOINT
-      const response = await axios.post("", url)
-      const data: ApiResponse = response.data
+      const domain = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/go`
+      const response = await axios.post(domain, url)
+      const result: SuccessResponse = response.data
       setIsSuccess(true)
-      setShortUrl(`${domain}/${data.url.id}`)
-      setLongUrl(data.url.url)
+      setShortUrl(`${domain}/${result.data.id}`)
+      setLongUrl(result.data.url)
     } catch (err) {
       const error = err as AxiosError
-      const { data }: AxiosResponse<ApiResponse> = error.response
+      const { data }: AxiosResponse<ErrorResponse> = error.response
       setIsSuccess(false)
       setAlertMessage(`Error: ${data.error}`)
     }
