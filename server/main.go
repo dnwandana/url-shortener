@@ -47,16 +47,18 @@ func main() {
 			return nil
 		},
 	})
-	app.Use(recover.New())
-
-	// setup controller
-	urlController.SetupRoutes(app)
-	userController.SetupRoutes(app)
 
 	// register cors middleware and allow browser expose credentials
 	app.Use(cors.New(cors.Config{
 		AllowCredentials: true,
 	}))
+
+	// receiver custom error handler
+	app.Use(recover.New())
+
+	// setup controller
+	urlController.SetupRoutes(app)
+	userController.SetupRoutes(app)
 
 	// listen to port `:5000` and log any errors
 	log.Fatal(app.Listen(":5000"))
