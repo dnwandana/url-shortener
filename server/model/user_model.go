@@ -3,7 +3,7 @@ package model
 // UserSignIn struct represents form data when trying to sign-in.
 type UserSignIn struct {
 	Email    string `json:"email" validate:"required,email"`
-	Password string `json:"password" validate:"required,min=6"`
+	Password string `json:"password" validate:"required,min=8"`
 }
 
 // UserSignUp struct represents form data when trying to sign-up.
