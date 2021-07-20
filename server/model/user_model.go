@@ -10,8 +10,8 @@ type UserSignIn struct {
 type UserSignUp struct {
 	Fullname             string `json:"fullname" validate:"required"`
 	Email                string `json:"email" validate:"required,email"`
-	Password             string `json:"password" validate:"required,min=6"`
-	ConfirmationPassword string `json:"confirmationPassword" validate:"required,min=6,eqfield=Password"`
+	Password             string `json:"password" validate:"required,min=8"`
+	ConfirmationPassword string `json:"confirmationPassword" validate:"required,min=8,eqfield=Password"`
 }
 
 // UserInformation struct represents user information data.
