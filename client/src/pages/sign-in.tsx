@@ -1,5 +1,6 @@
 import * as yup from "yup"
 import { AxiosError, AxiosResponse } from "axios"
+import { ErrorResponse } from "../APIResponse"
 import { useForm } from "react-hook-form"
 import { useRouter } from "next/router"
 import { useRef, useState } from "react"
@@ -18,11 +19,6 @@ const Alert = dynamic(() => import("../components/Alert"))
 type FormInput = {
   email: string
   password: string
-}
-
-type ApiResponse = {
-  statusCode: number
-  error: string
 }
 
 const signInPage = () => {
@@ -44,13 +40,13 @@ const signInPage = () => {
   const submitForm = async (user: FormInput) => {
     setIsSuccess(true)
     try {
-      await axios.post("/sign-in", user, { withCredentials: true })
+      await axios.post("account/sign-in", user, { withCredentials: true })
       setTimeout(() => {
         router.push("/dashboard")
       }, 1500)
     } catch (err) {
       const error = err as AxiosError
-      const { data }: AxiosResponse<ApiResponse> = error.response
+      const { data }: AxiosResponse<ErrorResponse> = error.response
       setIsSuccess(false)
       setAlertMessage(`Error: ${data.error}`)
       scrollToAlert()

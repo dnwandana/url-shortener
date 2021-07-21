@@ -1,5 +1,6 @@
 import * as yup from "yup"
 import { AxiosError, AxiosResponse } from "axios"
+import { ErrorResponse } from "../APIResponse"
 import { useRef, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useRouter } from "next/router"
@@ -20,15 +21,6 @@ type FormInput = {
   email: string
   password: string
   confirmationPassword: string
-}
-
-type ApiResponse = {
-  statusCode: number
-  user: {
-    id: string
-    fullname: string
-  }
-  error: string
 }
 
 const signUp = () => {
@@ -56,13 +48,13 @@ const signUp = () => {
   const submitForm = async (user: FormInput) => {
     setIsSuccess(true)
     try {
-      await axios.post("/sign-up", user)
+      await axios.post("account/sign-up", user)
       setTimeout(() => {
         router.push("/thank-you")
       }, 1500)
     } catch (err) {
       const error = err as AxiosError
-      const { data }: AxiosResponse<ApiResponse> = error.response
+      const { data }: AxiosResponse<ErrorResponse> = error.response
       setIsSuccess(false)
       setAlertMessage(`Error: ${data.error}`)
       scrollToAlert()
