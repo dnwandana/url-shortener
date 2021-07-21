@@ -21,6 +21,7 @@ func NewUserController(userService *service.UserService) UserController {
 // SetupRoutes Setup endpoint, parameter, middleware, and handler.
 func (controller *UserController) SetupRoutes(app *fiber.App) {
 	app.Get("/account", middleware.CookieRequired(), middleware.JWTRequired(), controller.getData)
+	app.Post("/account", middleware.CookieRequired(), middleware.JWTRequired(), controller.clearCookies)
 	app.Post("/account/sign-up", controller.signUp)
 	app.Post("/account/sign-in", controller.signIn)
 }
@@ -38,6 +39,14 @@ func (controller *UserController) getData(ctx *fiber.Ctx) error {
 		StatusCode: fiber.StatusOK,
 		Data:       userInfo,
 	})
+}
+
+// clearCookies handle clear all cookies on client side.
+func (controller *UserController) clearCookies(ctx *fiber.Ctx) error {
+	// clear all cookie
+	ctx.ClearCookie()
+	// cookie deleted
+	return ctx.SendStatus(fiber.StatusOK)
 }
 
 // signUp handle request for creating a new user.
