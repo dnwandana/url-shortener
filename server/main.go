@@ -1,40 +1,35 @@
 package main
 
 import (
-	"log"
-
 	"github.com/dnwandana/url-shortener/config"
+	"github.com/dnwandana/url-shortener/controller"
 	"github.com/dnwandana/url-shortener/repository"
-	"github.com/dnwandana/url-shortener/routes"
-	"github.com/dnwandana/url-shortener/services"
+	"github.com/dnwandana/url-shortener/service"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	_ "github.com/joho/godotenv/autoload"
 )
 
 func main() {
 	// get database connection
-	db, _ := config.DatabaseConnection()
+	db, err := config.DatabaseConnection()
+	if err != nil {
+		panic(err)
+	}
 
-	// setup url collection, instantiate repo, and services
-	urlCollection := db.Collection(config.Env("URL_COLLECTION"))
-	urlRepo := repository.NewUrlRepository(urlCollection)
-	urlService := services.NewUrlService(urlRepo)
-
-	// setup user collection, instantiate repo, and services
-	userCollection := db.Collection(config.Env("USER_COLLECTION"))
-	userRepo := repository.NewUserRepository(userCollection)
-	userService := services.NewUserService(userRepo)
+	// setup repository, service, and controller
+	urlRepo := repository.NewURLRepository(db)
+	urlService := service.NewURLService(&urlRepo)
+	urlController := controller.NewURLController(&urlService)
 
 	// instantitate fiber application
 	app := fiber.New()
 	// enable cors
 	app.Use(cors.New())
 
-	// setup userService and urlService into `/go` endpoint
-	apiRoute := app.Group("/go")
-	routes.UserRoutes(apiRoute, userService)
-	routes.UrlRoutes(apiRoute, urlService)
+	// setup routes
+	urlController.SetupRoutes(app)
 
 	// listen to port `:5000` and log any errors
-	log.Fatal(app.Listen(":5000"))
+	panic(app.Listen(":5000"))
 }
