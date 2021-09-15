@@ -1,14 +1,13 @@
-package utils
+package util
 
 import gonanoid "github.com/matoous/go-nanoid/v2"
 
-// GenerateNanoID return string 6 character unique id
-func GenerateNanoID() (string, error) {
+func GenerateNanoID(size int) (string, error) {
 	alphabet := "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-	nanoid, err := gonanoid.Generate(alphabet, 6)
-	// check if there is an error
+	nanoid, err := gonanoid.Generate(alphabet, size)
 	if err != nil {
 		return "", err
 	}
+
 	return nanoid, nil
 }
