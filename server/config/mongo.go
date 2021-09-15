@@ -2,7 +2,7 @@ package config
 
 import (
 	"context"
-	"log"
+	"os"
 	"strconv"
 	"time"
 
@@ -16,26 +16,26 @@ func DatabaseConnection() (*mongo.Database, error) {
 	defer cancel()
 
 	// get minimum number of connections allowed
-	minPoolSize, minPoolErr := strconv.Atoi(Env("MONGO_MIN_POOL"))
-	if minPoolErr != nil {
-		log.Fatal("=> minPoolSize error:", minPoolSize)
+	minPoolSize, err := strconv.Atoi(os.Getenv("MONGO_MIN_POOL"))
+	if err != nil {
+		panic(err)
 	}
 
 	// get maximum number of connections allowed
-	maxPoolSize, maxPoolErr := strconv.Atoi(Env("MONGO_MAX_POOL"))
-	if maxPoolErr != nil {
-		log.Fatal("=> maxPoolSize error:", maxPoolErr)
+	maxPoolSize, err := strconv.Atoi(os.Getenv("MONGO_MAX_POOL"))
+	if err != nil {
+		panic(err)
 	}
 
 	// get maximum time that connections will remain idle in second
-	maxConnIdle, maxConnErr := strconv.Atoi(Env("MONGO_MAX_CONN_IDLE"))
-	if maxConnErr != nil {
-		log.Fatal("=> maxConnIdle error:", maxConnErr)
+	maxConnIdle, err := strconv.Atoi(os.Getenv("MONGO_MAX_CONN_IDLE"))
+	if err != nil {
+		panic(err)
 	}
 
 	// setting client options
 	clientOption := options.Client().
-		ApplyURI(Env("MONGO_URI")).
+		ApplyURI(os.Getenv("MONGO_URI")).
 		SetMinPoolSize(uint64(minPoolSize)).
 		SetMaxPoolSize(uint64(maxPoolSize)).
 		SetMaxConnIdleTime(time.Duration(maxConnIdle) * time.Second)
@@ -43,17 +43,16 @@ func DatabaseConnection() (*mongo.Database, error) {
 	// try create new client
 	client, err := mongo.NewClient(clientOption)
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 
 	// create client connection
 	err = client.Connect(ctx)
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 
 	// return database connection
-	database := client.Database(Env("MONGO_DATABASE"))
-
+	database := client.Database(os.Getenv("MONGO_DATABASE"))
 	return database, nil
 }
