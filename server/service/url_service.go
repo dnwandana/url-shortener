@@ -5,9 +5,9 @@ import (
 )
 
 type URLService interface {
-	Create(url *model.URLCreateRequest) (*model.ResponseData, error)
+	Create(request *model.URLCreateRequest) (*model.URLResponse, error)
 
-	FindOne(id string) (*model.ResponseMessage, error)
+	FindOne(id string) (string, error)
 
-	Delete(id string) (*model.ResponseMessage, error)
+	Delete(id, secret_key string) error
 }
