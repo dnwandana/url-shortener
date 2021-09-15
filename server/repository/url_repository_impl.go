@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"errors"
 
 	"github.com/dnwandana/url-shortener/entity"
 	"go.mongodb.org/mongo-driver/bson"
@@ -35,21 +34,13 @@ func (r *urlRepositoryImpl) FindByID(id string) (*entity.URL, error) {
 		return nil, err
 	}
 
-	if url.ID == "" {
-		return nil, errors.New("No URL found")
-	}
-
 	return url, nil
 }
 
 func (r *urlRepositoryImpl) Delete(id string) error {
-	result, err := r.Collection.DeleteOne(context.Background(), bson.M{"id": id})
+	_, err := r.Collection.DeleteOne(context.Background(), bson.M{"id": id})
 	if err != nil {
 		return err
-	}
-
-	if result.DeletedCount == 0 {
-		return errors.New("No URL deleted")
 	}
 
 	return nil
