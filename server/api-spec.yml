@@ -24,16 +24,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                id:
-                  type: string
-                url:
-                  type: string
-                ttl:
-                  type: string
-              required:
-                - url
+              $ref: "#/components/schemas/URLCreateRequest"
             examples:
               Default:
                 value:
@@ -100,7 +91,7 @@ paths:
                   value:
                     code: 400
                     status: BAD_REQUEST
-                    message: ID already used
+                    message: id already used
         "500":
           description: Internal Server Error
           content:
@@ -110,7 +101,7 @@ paths:
               example:
                 code: 500
                 status: INTERNAL_SERVER_ERROR
-                message: There is something wrong
+                message: there is something wrong
   /go/{id}:
     get:
       tags:
@@ -132,7 +123,7 @@ paths:
               example:
                 code: 500
                 status: INTERNAL_SERVER_ERROR
-                message: There is something wrong
+                message: there is something wrong
     delete:
       tags:
         - URL Shortener
@@ -156,7 +147,7 @@ paths:
               example:
                 code: 200
                 status: OK
-                message: URL deleted
+                message: successfully deleted url
         "400":
           description: Failed to Delete URL
           content:
@@ -164,16 +155,16 @@ paths:
               schema:
                 $ref: "#/components/schemas/ResponseMessage"
               examples:
-                secret_key is empty:
+                empty or invalid secret_key:
                   value:
                     code: 400
                     status: BAD_REQUEST
-                    message: secret_key is a required field
+                    message: wrong secret_key
                 No URL Found:
                   value:
                     code: 400
                     status: BAD_REQUEST
-                    message: No URL deleted
+                    message: no url deleted
         "500":
           description: Internal Server Error
           content:
@@ -183,7 +174,7 @@ paths:
               example:
                 code: 500
                 status: INTERNAL_SERVER_ERROR
-                message: There is something wrong
+                message: there is something wrong
 components:
   parameters:
     id:
@@ -192,12 +183,29 @@ components:
       required: true
       schema:
         type: string
+        minLength: 3
       examples:
         Random Generated ID:
           value: zukaU2s
         Clean Code Book:
           value: clean-code-book
   schemas:
+    URLCreateRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          minLength: 3
+          nullable: true
+        url:
+          type: string
+          example: https://google.com/
+        ttl:
+          type: string
+          example: hour or week or month
+          nullable: true
+      required:
+        - url
     ResponseMessage:
       type: object
       properties:
