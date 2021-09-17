@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/dnwandana/url-shortener/model"
 	"github.com/dnwandana/url-shortener/service"
@@ -16,8 +17,7 @@ func NewURLController(urlService *service.URLService) URLController {
 	return URLController{URLService: *urlService}
 }
 
-func (controller *URLController) SetupRoutes(app *fiber.App) {
-	router := app.Group("/api/v1")
+func (controller *URLController) SetupRoutes(router fiber.Router) {
 	router.Post("/go", controller.Create)
 	router.Get("/go/:id", controller.FindOne)
 	router.Delete("/go/:id", controller.Delete)
@@ -52,14 +52,10 @@ func (controller *URLController) Create(ctx *fiber.Ctx) error {
 
 func (controller *URLController) FindOne(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
-	fmt.Println(id)
 	url, err := controller.URLService.FindOne(id)
+	notFoundPage := fmt.Sprintf("%s/404", os.Getenv("DOMAIN"))
 	if err != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(model.ResponseMessage{
-			Code:    fiber.StatusBadRequest,
-			Status:  model.StatusBadRequest,
-			Message: err.Error(),
-		})
+		return ctx.Redirect(notFoundPage, fiber.StatusMovedPermanently)
 	}
 
 	return ctx.Redirect(url, fiber.StatusMovedPermanently)

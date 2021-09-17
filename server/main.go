@@ -27,8 +27,11 @@ func main() {
 	// enable cors
 	app.Use(cors.New())
 
+	// setting group prefix api v1
+	v1 := app.Group("/api/v1")
+
 	// setup routes
-	urlController.SetupRoutes(app)
+	urlController.SetupRoutes(v1)
 
 	// listen to port `:5000` and log any errors
 	panic(app.Listen(":5000"))

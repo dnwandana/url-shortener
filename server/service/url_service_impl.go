@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"time"
 
@@ -55,7 +56,7 @@ func (service *urlServiceImpl) Create(request *model.URLCreateRequest) (*model.U
 		}
 	}
 
-	shortUrl := os.Getenv("DOMAIN") + id
+	shortUrl := fmt.Sprintf("%s/go/%s", os.Getenv("DOMAIN"), id)
 	secret_key, _ := util.GenerateNanoID(7)
 	url := entity.URL{
 		ID:        id,
