@@ -1,13 +1,13 @@
 package util
 
-import gonanoid "github.com/matoous/go-nanoid/v2"
+import (
+	"github.com/dnwandana/url-shortener/exception"
+	gonanoid "github.com/matoous/go-nanoid/v2"
+)
 
-func GenerateNanoID(size int) (string, error) {
+func GenerateNanoID(size int) string {
 	alphabet := "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 	nanoid, err := gonanoid.Generate(alphabet, size)
-	if err != nil {
-		return "", err
-	}
-
-	return nanoid, nil
+	exception.PanicIfNeeded(err)
+	return nanoid
 }

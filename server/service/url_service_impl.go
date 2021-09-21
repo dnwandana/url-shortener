@@ -1,12 +1,12 @@
 package service
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"time"
 
 	"github.com/dnwandana/url-shortener/entity"
+	"github.com/dnwandana/url-shortener/exception"
 	"github.com/dnwandana/url-shortener/model"
 	"github.com/dnwandana/url-shortener/repository"
 	"github.com/dnwandana/url-shortener/util"
@@ -22,18 +22,21 @@ func NewURLService(urlRepository *repository.URLRepository) URLService {
 	}
 }
 
-func (service *urlServiceImpl) Create(request *model.URLCreateRequest) (*model.URLResponse, error) {
+func (service *urlServiceImpl) Create(request *model.URLCreateRequest) *model.URLResponse {
 	var id string
 	var expireAt time.Time
 
+	// TODO: validate the requestBody
+
 	if request.ID == "" {
-		id, _ = util.GenerateNanoID(7)
+		id = util.GenerateNanoID(7)
 	} else {
 		id = request.ID
 		urlExist, _ := service.URLRepository.FindByID(id)
-
 		if urlExist != nil {
-			return nil, errors.New("custom id already used")
+			exception.PanicIfNeeded(exception.BadRequestError{
+				Message: "custom id already used",
+			})
 		}
 	}
 
@@ -57,7 +60,7 @@ func (service *urlServiceImpl) Create(request *model.URLCreateRequest) (*model.U
 	}
 
 	shortUrl := fmt.Sprintf("%s/go/%s", os.Getenv("DOMAIN"), id)
-	secret_key, _ := util.GenerateNanoID(7)
+	secret_key := util.GenerateNanoID(7)
 	url := entity.URL{
 		ID:        id,
 		URL:       request.URL,
@@ -66,9 +69,7 @@ func (service *urlServiceImpl) Create(request *model.URLCreateRequest) (*model.U
 	}
 
 	err := service.URLRepository.Insert(&url)
-	if err != nil {
-		return nil, err
-	}
+	exception.PanicIfNeeded(err)
 
 	response := model.URLResponse{
 		ID:        url.ID,
@@ -78,32 +79,32 @@ func (service *urlServiceImpl) Create(request *model.URLCreateRequest) (*model.U
 		ExpireAt:  expireAt,
 	}
 
-	return &response, nil
+	return &response
 }
 
-func (service *urlServiceImpl) FindOne(id string) (string, error) {
+func (service *urlServiceImpl) FindOne(id string) string {
 	data, err := service.URLRepository.FindByID(id)
 	if err != nil {
-		return "", err
+		return ""
 	}
 
-	return data.URL, nil
+	return data.URL
 }
 
-func (service *urlServiceImpl) Delete(id, secret_key string) error {
+func (service *urlServiceImpl) Delete(id, secret_key string) {
 	url, _ := service.URLRepository.FindByID(id)
 	if url == nil {
-		return errors.New("no url deleted")
+		exception.PanicIfNeeded(exception.BadRequestError{
+			Message: "no url deleted",
+		})
 	}
 
 	if url.SecretKey != secret_key {
-		return errors.New("wrong secret_key")
+		exception.PanicIfNeeded(exception.BadRequestError{
+			Message: "wrong secret_key",
+		})
 	}
 
 	err := service.URLRepository.Delete(id)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	exception.PanicIfNeeded(err)
 }

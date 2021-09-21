@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/dnwandana/url-shortener/exception"
 	"github.com/dnwandana/url-shortener/model"
 	"github.com/dnwandana/url-shortener/service"
 	"github.com/gofiber/fiber/v2"
@@ -26,23 +27,8 @@ func (controller *URLController) SetupRoutes(router fiber.Router) {
 func (controller *URLController) Create(ctx *fiber.Ctx) error {
 	var request model.URLCreateRequest
 	err := ctx.BodyParser(&request)
-	if err != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(model.ResponseMessage{
-			Code:    fiber.StatusBadRequest,
-			Status:  model.StatusBadRequest,
-			Message: err.Error(),
-		})
-	}
-
-	response, err := controller.URLService.Create(&request)
-	if err != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(model.ResponseMessage{
-			Code:    fiber.StatusBadRequest,
-			Status:  model.StatusBadRequest,
-			Message: err.Error(),
-		})
-	}
-
+	exception.PanicIfNeeded(err)
+	response := controller.URLService.Create(&request)
 	return ctx.Status(fiber.StatusCreated).JSON(model.ResponseData{
 		Code:   fiber.StatusCreated,
 		Status: model.StatusCreated,
@@ -52,9 +38,9 @@ func (controller *URLController) Create(ctx *fiber.Ctx) error {
 
 func (controller *URLController) FindOne(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
-	url, err := controller.URLService.FindOne(id)
+	url := controller.URLService.FindOne(id)
 	notFoundPage := fmt.Sprintf("%s/404", os.Getenv("DOMAIN"))
-	if err != nil {
+	if url == "" {
 		return ctx.Redirect(notFoundPage, fiber.StatusMovedPermanently)
 	}
 
@@ -64,15 +50,7 @@ func (controller *URLController) FindOne(ctx *fiber.Ctx) error {
 func (controller *URLController) Delete(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
 	secret_key := ctx.Query("secret_key")
-	err := controller.URLService.Delete(id, secret_key)
-	if err != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(model.ResponseMessage{
-			Code:    fiber.StatusBadRequest,
-			Status:  model.StatusBadRequest,
-			Message: err.Error(),
-		})
-	}
-
+	controller.URLService.Delete(id, secret_key)
 	return ctx.Status(fiber.StatusOK).JSON(model.ResponseMessage{
 		Code:    fiber.StatusOK,
 		Status:  model.StatusOK,

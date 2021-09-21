@@ -3,10 +3,12 @@ package main
 import (
 	"github.com/dnwandana/url-shortener/config"
 	"github.com/dnwandana/url-shortener/controller"
+	"github.com/dnwandana/url-shortener/exception"
 	"github.com/dnwandana/url-shortener/repository"
 	"github.com/dnwandana/url-shortener/service"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 	_ "github.com/joho/godotenv/autoload"
 )
 
@@ -23,9 +25,16 @@ func main() {
 	urlController := controller.NewURLController(&urlService)
 
 	// instantitate fiber application
-	app := fiber.New()
+	app := fiber.New(
+		fiber.Config{
+			ErrorHandler: exception.ErrorHandler,
+		},
+	)
+
 	// enable cors
 	app.Use(cors.New())
+	// recover panic
+	app.Use(recover.New())
 
 	// setting group prefix api v1
 	v1 := app.Group("/api/v1")
