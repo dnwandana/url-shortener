@@ -26,7 +26,10 @@ func (service *urlServiceImpl) Create(request *model.URLCreateRequest) *model.UR
 	var id string
 	var expireAt time.Time
 
-	// TODO: validate the requestBody
+	err := request.Validate()
+	exception.PanicIfNeeded(exception.BadRequestError{
+		Message: err.Error(),
+	})
 
 	if request.ID == "" {
 		id = util.GenerateNanoID(7)
@@ -68,7 +71,7 @@ func (service *urlServiceImpl) Create(request *model.URLCreateRequest) *model.UR
 		ExpireAt:  expireAt,
 	}
 
-	err := service.URLRepository.Insert(&url)
+	err = service.URLRepository.Insert(&url)
 	exception.PanicIfNeeded(err)
 
 	response := model.URLResponse{
