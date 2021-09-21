@@ -8,14 +8,14 @@ import (
 func ErrorHandler(ctx *fiber.Ctx, err error) error {
 	_, ok := err.(BadRequestError)
 	if ok {
-		return ctx.JSON(model.ResponseMessage{
+		return ctx.Status(fiber.StatusBadRequest).JSON(model.ResponseMessage{
 			Code:    fiber.StatusBadRequest,
 			Status:  model.StatusBadRequest,
 			Message: err.Error(),
 		})
 	}
 
-	return ctx.JSON(model.ResponseMessage{
+	return ctx.Status(fiber.StatusInternalServerError).JSON(model.ResponseMessage{
 		Code:    fiber.StatusInternalServerError,
 		Status:  model.StatusInternalServerError,
 		Message: err.Error(),
