@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"os"
 
 	"github.com/dnwandana/url-shortener/entity"
 	"go.mongodb.org/mongo-driver/bson"
@@ -14,7 +15,7 @@ type urlRepositoryImpl struct {
 
 func NewURLRepository(database *mongo.Database) URLRepository {
 	return &urlRepositoryImpl{
-		Collection: database.Collection("urls"),
+		Collection: database.Collection(os.Getenv("URL_COLLECTION")),
 	}
 }
 
