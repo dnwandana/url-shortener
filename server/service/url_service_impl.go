@@ -97,14 +97,14 @@ func (service *urlServiceImpl) Delete(id, secret_key string) {
 		exception.PanicIfNeeded(exception.BadRequestError{
 			Message: "no url deleted",
 		})
-	}
+	} else {
+		if url.SecretKey != secret_key {
+			exception.PanicIfNeeded(exception.BadRequestError{
+				Message: "wrong secret_key",
+			})
+		}
 
-	if url.SecretKey != secret_key {
-		exception.PanicIfNeeded(exception.BadRequestError{
-			Message: "wrong secret_key",
-		})
+		err := service.URLRepository.Delete(id)
+		exception.PanicIfNeeded(err)
 	}
-
-	err := service.URLRepository.Delete(id)
-	exception.PanicIfNeeded(err)
 }
