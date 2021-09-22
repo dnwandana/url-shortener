@@ -1,5 +1,6 @@
 package model
 
+// constant variable for http status message
 const (
 	StatusOK                  = "OK"
 	StatusCreated             = "CREATED"

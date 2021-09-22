@@ -5,6 +5,7 @@ import (
 	gonanoid "github.com/matoous/go-nanoid/v2"
 )
 
+// Generate random id based on request size
 func GenerateNanoID(size int) string {
 	alphabet := "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 	nanoid, err := gonanoid.Generate(alphabet, size)

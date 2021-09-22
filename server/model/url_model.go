@@ -14,6 +14,7 @@ type URLCreateRequest struct {
 	TTL string `json:"ttl"`
 }
 
+// struct method for URLCreateRequest struct to validate the requestBody.
 func (request URLCreateRequest) Validate() error {
 	err := validation.ValidateStruct(&request,
 		validation.Field(&request.ID, validation.When(request.ID != "", validation.Length(3, 0))),
