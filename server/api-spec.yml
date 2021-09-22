@@ -1,0 +1,240 @@
+openapi: 3.0.3
+info:
+  title: URL Shortener REST API
+  version: "1.0"
+  description: API Spec for URL Shortener REST API
+  contact:
+    name: Wandana
+    url: https://github.com/dnwandana
+  license:
+    name: MIT
+    url: https://github.com/dnwandana/url-shortener/blob/main/LICENSE.md
+servers:
+  - url: https://dhanz.xyz/api/v1
+tags:
+  - name: URL Shortener
+paths:
+  /go:
+    post:
+      tags:
+        - URL Shortener
+      summary: Shorten URL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/URLCreateRequest"
+            examples:
+              Default:
+                description: Just provide a valid URL
+                value:
+                  url: https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882
+              With custom ID:
+                description: Custom ID must be at least 3 character.
+                value:
+                  id: clean-code-book
+                  url: https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882
+              With TTL:
+                description: The value can be one of hour, week or month. The default value is month.
+                value:
+                  url: https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882
+                  ttl: hour
+              Full example:
+                value:
+                  id: clean-code-book
+                  url: https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882
+                  ttl: hour
+      responses:
+        "201":
+          description: Successfully Shorten URL
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseData"
+              examples:
+                Default:
+                  value:
+                    code: 201
+                    status: CREATED
+                    data:
+                      id: zukaU2s
+                      long_url: https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882
+                      short_url: https://dhanz.xyz/go/zukaU2s
+                      secret_key: VCdb0fY
+                      expire_at: YYYY-MM-DDThh:mm:ss.sTZD
+                With custom ID:
+                  value:
+                    code: 201
+                    status: CREATED
+                    data:
+                      id: clean-code-book
+                      long_url: https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882
+                      short_url: https://dhanz.xyz/go/clean-code
+                      secret_key: VCdb0fY
+                      expire_at: YYYY-MM-DDThh:mm:ss.sTZD
+        "400":
+          description: Failed to Shorten URL
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseMessage"
+              examples:
+                URL is empty:
+                  value:
+                    code: 400
+                    status: BAD_REQUEST
+                    message: URL is a required field
+                Invalid URL:
+                  value:
+                    code: 400
+                    status: BAD_REQUEST
+                    message: Please, provide a valid url
+                ID already used:
+                  value:
+                    code: 400
+                    status: BAD_REQUEST
+                    message: id already used
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseMessage"
+              example:
+                code: 500
+                status: INTERNAL_SERVER_ERROR
+                message: there is something wrong
+  /go/{id}:
+    get:
+      tags:
+        - URL Shortener
+      summary: Go to Specific URL
+      parameters:
+        - $ref: "#/components/parameters/id"
+      responses:
+        "301":
+          description: Redirected to original URL
+        "404":
+          description: Redirected to https://dhanz.xyz/404
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseMessage"
+              example:
+                code: 500
+                status: INTERNAL_SERVER_ERROR
+                message: there is something wrong
+    delete:
+      tags:
+        - URL Shortener
+      summary: Delete Specific URL
+      parameters:
+        - $ref: "#/components/parameters/id"
+        - in: query
+          name: secret_key
+          description: Sample random generated secret_key
+          schema:
+            type: string
+          example: VCdb0fY
+          required: true
+      responses:
+        "200":
+          description: Successfully Delete URL
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseMessage"
+              example:
+                code: 200
+                status: OK
+                message: successfully deleted url
+        "400":
+          description: Failed to Delete URL
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseMessage"
+              examples:
+                empty or invalid secret_key:
+                  value:
+                    code: 400
+                    status: BAD_REQUEST
+                    message: wrong secret_key
+                No URL Found:
+                  value:
+                    code: 400
+                    status: BAD_REQUEST
+                    message: no url deleted
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseMessage"
+              example:
+                code: 500
+                status: INTERNAL_SERVER_ERROR
+                message: there is something wrong
+components:
+  parameters:
+    id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        minLength: 3
+      examples:
+        Random Generated ID:
+          value: zukaU2s
+        Clean Code Book:
+          value: clean-code-book
+  schemas:
+    URLCreateRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          minLength: 3
+          nullable: true
+        url:
+          type: string
+          example: https://google.com/
+        ttl:
+          type: string
+          example: hour or week or month
+          nullable: true
+      required:
+        - url
+    ResponseMessage:
+      type: object
+      properties:
+        code:
+          type: integer
+        status:
+          type: string
+        message:
+          type: string
+    ResponseData:
+      type: object
+      properties:
+        code:
+          type: integer
+        status:
+          type: string
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+            long_url:
+              type: string
+            short_url:
+              type: string
+            secret_key:
+              type: string
+            expire_at:
+              type: string
