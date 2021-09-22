@@ -27,21 +27,24 @@ paths:
               $ref: "#/components/schemas/URLCreateRequest"
             examples:
               Default:
+                description: Just provide a valid URL
                 value:
                   url: https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882
               With custom ID:
+                description: Custom ID must be at least 3 character.
                 value:
                   id: clean-code-book
                   url: https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882
               With TTL:
+                description: The value can be one of hour, week or month. The default value is month.
                 value:
                   url: https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882
-                  ttl: 1hour
+                  ttl: hour
               Full example:
                 value:
                   id: clean-code-book
                   url: https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882
-                  ttl: 1hour
+                  ttl: hour
       responses:
         "201":
           description: Successfully Shorten URL
