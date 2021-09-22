@@ -6,32 +6,28 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/dnwandana/url-shortener/exception"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // DatabaseConnection will return MongoDB Database.
-func DatabaseConnection() (*mongo.Database, error) {
+func DatabaseConnection() *mongo.Database {
+	// create context
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	// get minimum number of connections allowed
 	minPoolSize, err := strconv.Atoi(os.Getenv("MONGO_MIN_POOL"))
-	if err != nil {
-		panic(err)
-	}
+	exception.PanicIfNeeded(err)
 
 	// get maximum number of connections allowed
 	maxPoolSize, err := strconv.Atoi(os.Getenv("MONGO_MAX_POOL"))
-	if err != nil {
-		panic(err)
-	}
+	exception.PanicIfNeeded(err)
 
 	// get maximum time that connections will remain idle in second
 	maxConnIdle, err := strconv.Atoi(os.Getenv("MONGO_MAX_CONN_IDLE"))
-	if err != nil {
-		panic(err)
-	}
+	exception.PanicIfNeeded(err)
 
 	// setting client options
 	clientOption := options.Client().
@@ -42,17 +38,13 @@ func DatabaseConnection() (*mongo.Database, error) {
 
 	// try create new client
 	client, err := mongo.NewClient(clientOption)
-	if err != nil {
-		panic(err)
-	}
+	exception.PanicIfNeeded(err)
 
 	// create client connection
 	err = client.Connect(ctx)
-	if err != nil {
-		panic(err)
-	}
+	exception.PanicIfNeeded(err)
 
 	// return database connection
 	database := client.Database(os.Getenv("MONGO_DATABASE"))
-	return database, nil
+	return database
 }

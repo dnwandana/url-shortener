@@ -14,10 +14,7 @@ import (
 
 func main() {
 	// get database connection
-	db, err := config.DatabaseConnection()
-	if err != nil {
-		panic(err)
-	}
+	db := config.DatabaseConnection()
 
 	// setup repository, service, and controller
 	urlRepo := repository.NewURLRepository(db)
