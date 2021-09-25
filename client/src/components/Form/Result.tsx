@@ -27,7 +27,8 @@ const Result = ({ longURL, shortURL }: ResultProps): JSX.Element => {
             className="font-medium text-base text-indigo-600"
             href={shortURL}
             target="_blank"
-            rel="noreferrer">
+            rel="noreferrer"
+          >
             {shortURL}
           </a>
         </div>
@@ -38,7 +39,8 @@ const Result = ({ longURL, shortURL }: ResultProps): JSX.Element => {
                 copyStatus
                   ? "bg-green-500 text-green-100 focus:ring-green-500"
                   : "bg-indigo-200 text-indigo-700 hover:bg-indigo-300 hover:text-indigo-900 focus:ring-indigo-300"
-              }`}>
+              }`}
+            >
               {copyStatus ? "Copied!" : "Copy"}
             </button>
           </CopyToClipboard>

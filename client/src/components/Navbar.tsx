@@ -24,13 +24,15 @@ const Navbar = (): JSX.Element => {
               type="button"
               className="text-gray-800 hover:text-gray-900"
               aria-label="toggle menu"
-              onClick={toggleMenu}>
+              onClick={toggleMenu}
+            >
               {isMenuOpen ? (
                 <svg
                   className="w-6 h-6 fill-current"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
-                  stroke="currentColor">
+                  stroke="currentColor"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -43,7 +45,8 @@ const Navbar = (): JSX.Element => {
                   className="w-6 h-6 fill-current"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
-                  stroke="currentColor">
+                  stroke="currentColor"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -58,7 +61,8 @@ const Navbar = (): JSX.Element => {
 
         {/* <!-- Mobile Menu open: "block", Menu closed: "hidden" --> */}
         <div
-          className={`items-center md:flex ${isMenuOpen ? "block" : "hidden"}`}>
+          className={`items-center md:flex ${isMenuOpen ? "block" : "hidden"}`}
+        >
           <div className="flex flex-col md:items-center mt-3 md:mt-0 md:flex-row md:mx-6 space-y-3 space-x-0 md:space-y-0 md:space-x-5">
             <Link href="/under-construction">
               <a className="font-medium text-base md:text-lg lg:text-xl text-gray-800 hover:text-indigo-500">
