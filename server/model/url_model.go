@@ -10,7 +10,7 @@ import (
 // URLCreateRequest struct represents form data when shortening URL.
 type URLCreateRequest struct {
 	ID  string `json:"id"`
-	URL string `json:"url" validate:"required,url"`
+	URL string `json:"url"`
 	TTL string `json:"ttl"`
 }
 
