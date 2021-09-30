@@ -4,11 +4,7 @@ type AlertProps = {
 }
 
 const Alert = ({ AlertClass, Message }: AlertProps): JSX.Element => {
-  return (
-    <div className={AlertClass}>
-      {Message}
-    </div>
-  )
+  return <div className={AlertClass}>{Message}</div>
 }
 
 export default Alert
