@@ -130,6 +130,7 @@ const ShortenForm = (): JSX.Element => {
               name="ttl"
               className="block mt-1 px-3 py-2 w-full text-sm bg-white border border-gray-300 focus:border-indigo-500 rounded-md focus:outline-none shadow-sm focus:ring-indigo-500">
               <option value="hour">1 Hour</option>
+              <option value="day">1 Day</option>
               <option value="week">1 Week</option>
               <option value="month">1 Month</option>
               <option value="year">1 Year (Default)</option>
