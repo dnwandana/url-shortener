@@ -29,9 +29,11 @@ func (service *urlServiceImpl) Create(request *model.URLCreateRequest) *model.UR
 
 	// validate the requestBody and check if there is an error
 	err := request.Validate()
-	exception.PanicIfNeeded(exception.BadRequestError{
-		Message: err.Error(),
-	})
+	if err != nil {
+		panic(exception.BadRequestError{
+			Message: err.Error(),
+		})
+	}
 
 	// check if Custom ID is specified in the requestBody
 	if request.ID == "" {
