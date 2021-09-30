@@ -52,18 +52,24 @@ func (service *urlServiceImpl) Create(request *model.URLCreateRequest) *model.UR
 
 	// check if TTL is specified in the requestBody
 	var hour = time.Duration(1) * time.Hour
+	var day = time.Duration(24) * time.Hour
 	var week = time.Duration(168) * time.Hour
 	var month = time.Duration(720) * time.Hour
+	var year = time.Duration(8760) * time.Hour
 
 	switch request.TTL {
 	case "hour":
 		expireAt = time.Now().Add(hour)
+	case "day":
+		expireAt = time.Now().Add(day)
 	case "week":
 		expireAt = time.Now().Add(week)
 	case "month":
 		expireAt = time.Now().Add(month)
+	case "year":
+		expireAt = time.Now().Add(year)
 	default:
-		expireAt = time.Now().Add(month)
+		expireAt = time.Now().Add(year)
 	}
 
 	// assign short url into variable domain.tld/go/id
