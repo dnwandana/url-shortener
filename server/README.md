@@ -4,7 +4,7 @@ This is server-side application part of URL Shortener. Built using Golang, Fiber
 
 ## API Spec
 
-Read more at [api-spec.yml](./api-spec.yml)
+Read more at [api-spec.yaml](./api-spec.yaml)
 
 ## Project Setup
 
