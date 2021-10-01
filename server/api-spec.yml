@@ -36,7 +36,7 @@ paths:
                   id: clean-code-book
                   url: https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882
               With TTL:
-                description: The value can be one of hour, week or month. The default value is month.
+                description: The value can be one of hour, day, week, month or year. The default value is month.
                 value:
                   url: https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882
                   ttl: hour
@@ -94,7 +94,7 @@ paths:
                   value:
                     code: 400
                     status: BAD_REQUEST
-                    message: id already used
+                    message: Custom back-half already used
         "500":
           description: Internal Server Error
           content:
@@ -150,7 +150,7 @@ paths:
               example:
                 code: 200
                 status: OK
-                message: successfully deleted url
+                message: Successfully deleted URL
         "400":
           description: Failed to Delete URL
           content:
@@ -162,12 +162,12 @@ paths:
                   value:
                     code: 400
                     status: BAD_REQUEST
-                    message: wrong secret_key
+                    message: Wrong secret_key
                 No URL Found:
                   value:
                     code: 400
                     status: BAD_REQUEST
-                    message: no url deleted
+                    message: No URL deleted
         "500":
           description: Internal Server Error
           content:
@@ -205,7 +205,7 @@ components:
           example: https://google.com/
         ttl:
           type: string
-          example: hour or week or month
+          example: hour or day or week or month or year
           nullable: true
       required:
         - url

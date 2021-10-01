@@ -45,7 +45,7 @@ func (service *urlServiceImpl) Create(request *model.URLCreateRequest) *model.UR
 		urlExist, _ := service.URLRepository.FindByID(id)
 		if urlExist != nil {
 			exception.PanicIfNeeded(exception.BadRequestError{
-				Message: "custom id already used",
+				Message: "Custom back-half already used",
 			})
 		}
 	}
@@ -120,13 +120,13 @@ func (service *urlServiceImpl) Delete(id, secret_key string) {
 	if url == nil {
 		// if there are no matched url with the given id
 		exception.PanicIfNeeded(exception.BadRequestError{
-			Message: "no url deleted",
+			Message: "No URL deleted",
 		})
 	} else {
 		// if the given secret_key is not same as the secret_key from database
 		if url.SecretKey != secret_key {
 			exception.PanicIfNeeded(exception.BadRequestError{
-				Message: "wrong secret_key",
+				Message: "Wrong secret_key",
 			})
 		}
 

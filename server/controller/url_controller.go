@@ -69,6 +69,6 @@ func (controller *URLController) Delete(ctx *fiber.Ctx) error {
 	return ctx.Status(fiber.StatusOK).JSON(model.ResponseMessage{
 		Code:    fiber.StatusOK,
 		Status:  model.StatusOK,
-		Message: "successfully deleted url",
+		Message: "Successfully deleted URL",
 	})
 }
