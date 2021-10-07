@@ -19,9 +19,15 @@ func NewURLController(urlService *service.URLService) URLController {
 }
 
 func (controller *URLController) SetupRoutes(router fiber.Router) {
+	router.Get("/go", controller.RedirectToHomePage)
 	router.Post("/go", controller.Create)
 	router.Get("/go/:id", controller.FindOne)
 	router.Delete("/go/:id", controller.Delete)
+}
+
+// Redirect to Homepage
+func (controller *URLController) RedirectToHomePage(ctx *fiber.Ctx) error {
+	return ctx.Redirect(os.Getenv("DOMAIN"), fiber.StatusMovedPermanently)
 }
 
 // Shorten URL
