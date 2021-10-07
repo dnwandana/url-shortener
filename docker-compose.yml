@@ -5,9 +5,9 @@ services:
     ports:
       - 8080:8080
     environment:
-      - SWAGGER_JSON="/data/api-spec.yaml"
+      - SWAGGER_JSON=/data/api-spec.yaml
     volumes:
-      - ./server/api-spec.yml:/data/api-spec.yaml
+      - ./server/api-spec.yaml:/data/api-spec.yaml
     networks:
       - url-shortener
     restart: unless-stopped
@@ -19,13 +19,13 @@ services:
     ports:
       - 5000:5000
     environment:
-      - MONGO_URI="mongodb://username:password@host:port"
-      - MONGO_MIN_POOL="10"
-      - MONGO_MAX_POOL="100"
-      - MONGO_MAX_CONN_IDLE="60"
-      - MONGO_DATABASE="urlShortener"
-      - URL_COLLECTION="urls"
-      - DOMAIN="https://domain.tld"
+      - MONGO_URI=mongodb://username:password@host:port
+      - MONGO_MIN_POOL=10
+      - MONGO_MAX_POOL=100
+      - MONGO_MAX_CONN_IDLE=60
+      - MONGO_DATABASE=urlShortener
+      - URL_COLLECTION=urls
+      - DOMAIN=https://domain.tld
     networks:
       - url-shortener
     restart: unless-stopped
@@ -37,7 +37,7 @@ services:
     build:
       context: ./client
       args:
-        - API_ENDPOINT="https://domain.tld/go"
+        - API_ENDPOINT=https://domain.tld/api/v1/go
     ports:
       - 3000:3000
     networks:
@@ -60,6 +60,7 @@ services:
       - url-shortener
     restart: unless-stopped
     depends_on:
+      - api-spec
       - server
       - client
 
