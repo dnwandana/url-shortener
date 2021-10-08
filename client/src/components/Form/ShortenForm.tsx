@@ -37,12 +37,13 @@ const ShortenForm = (): JSX.Element => {
   const setSuccess = store((state: GlobalState) => state.setSuccess)
   const setLongURL = store((state: GlobalState) => state.setLongURL)
   const setShortURL = store((state: GlobalState) => state.setShortURL)
+  const DOMAIN = process.env.NEXT_PUBLIC_DOMAIN
 
   const shortenURL = async (formData: FormInput) => {
     try {
       setIsLoading(true)
-      const domain = process.env.NEXT_PUBLIC_API_ENDPOINT
-      const response = await axios.post(domain, formData)
+      const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT
+      const response = await axios.post(API_ENDPOINT, formData)
       const data: ResponseData = response.data
       setSuccess(true)
       setAlertMessage("")
@@ -104,7 +105,7 @@ const ShortenForm = (): JSX.Element => {
             </div>
             <div className="flex mt-1 rounded-md shadow-sm">
               <span className="hidden items-center px-3 text-gray-500 text-sm bg-gray-50 border border-r-0 border-gray-300 rounded-l-md md:inline-flex">
-                https://dhanz.xyz/go/
+                {`${DOMAIN}/go/`}
               </span>
               <input
                 ref={register}

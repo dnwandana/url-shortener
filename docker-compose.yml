@@ -38,6 +38,7 @@ services:
       context: ./client
       args:
         - API_ENDPOINT=https://domain.tld/api/v1/go
+        - DOMAIN=https://domain.tld
     ports:
       - 3000:3000
     networks:
