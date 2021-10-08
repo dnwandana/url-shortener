@@ -8,6 +8,7 @@ import (
 	"github.com/dnwandana/url-shortener/service"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	_ "github.com/joho/godotenv/autoload"
 )
@@ -32,6 +33,11 @@ func main() {
 	app.Use(cors.New())
 	// recover panic
 	app.Use(recover.New())
+	// logger middleware
+	app.Use(logger.New(logger.Config{
+		TimeFormat: "2-Jan-2006 15:04:05",
+		TimeZone:   "Asia/Jakarta",
+	}))
 
 	// setting group prefix api v1
 	v1 := app.Group("/api/v1")
