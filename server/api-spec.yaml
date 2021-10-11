@@ -70,7 +70,7 @@ paths:
                     data:
                       id: clean-code-book
                       long_url: https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882
-                      short_url: https://domain.tld/go/clean-code
+                      short_url: https://domain.tld/go/clean-code-book
                       secret_key: VCdb0fY
                       expire_at: YYYY-MM-DDThh:mm:ss.sTZD
         "400":
