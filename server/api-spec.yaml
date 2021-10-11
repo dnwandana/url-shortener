@@ -10,7 +10,7 @@ info:
     name: MIT
     url: https://github.com/dnwandana/url-shortener/blob/main/LICENSE.md
 servers:
-  - url: https://dhanz.xyz/api/v1
+  - url: https://domain.tld/api/v1
 tags:
   - name: URL Shortener
 paths:
@@ -60,7 +60,7 @@ paths:
                     data:
                       id: zukaU2s
                       long_url: https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882
-                      short_url: https://dhanz.xyz/go/zukaU2s
+                      short_url: https://domain.tld/go/zukaU2s
                       secret_key: VCdb0fY
                       expire_at: YYYY-MM-DDThh:mm:ss.sTZD
                 With custom ID:
@@ -70,7 +70,7 @@ paths:
                     data:
                       id: clean-code-book
                       long_url: https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882
-                      short_url: https://dhanz.xyz/go/clean-code
+                      short_url: https://domain.tld/go/clean-code
                       secret_key: VCdb0fY
                       expire_at: YYYY-MM-DDThh:mm:ss.sTZD
         "400":
@@ -116,7 +116,7 @@ paths:
         "301":
           description: Redirected to original URL
         "404":
-          description: Redirected to https://dhanz.xyz/404
+          description: Redirected to https://domain.tld/404
         "500":
           description: Internal Server Error
           content:
