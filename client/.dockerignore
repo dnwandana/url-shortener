@@ -4,4 +4,4 @@ node_modules
 .env
 .env.example
 Dockerfile
-README.md
+.md

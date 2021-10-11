@@ -1,4 +1,17 @@
 services:
+  api-spec:
+    container_name: api-spec
+    image: swaggerapi/swagger-ui:v3.52.2
+    ports:
+      - 8080:8080
+    environment:
+      - SWAGGER_JSON=/data/api-spec.yaml
+    volumes:
+      - ./server/api-spec.yaml:/data/api-spec.yaml
+    networks:
+      - url-shortener
+    restart: unless-stopped
+
   server:
     container_name: server
     build:
@@ -6,30 +19,30 @@ services:
     ports:
       - 5000:5000
     environment:
-      - MONGO_URI=mongodb://localhost:27017
+      - MONGO_URI=mongodb://username:password@host:port
       - MONGO_MIN_POOL=10
       - MONGO_MAX_POOL=100
       - MONGO_MAX_CONN_IDLE=60
       - MONGO_DATABASE=urlShortener
       - URL_COLLECTION=urls
-      - USER_COLLECTION=users
-      - JWT_SECRET=SECRET
-      - JWT_LIFE=6
-      - STAGE=PRODUCTION
+      - DOMAIN=https://domain.tld
     networks:
-      - app-network
+      - url-shortener
     restart: unless-stopped
+    depends_on:
+      - api-spec
 
   client:
     container_name: client
     build:
       context: ./client
       args:
-        - API_ENDPOINT=https://domain.tld/go
+        - API_ENDPOINT=https://domain.tld/api/v1/go
+        - DOMAIN=https://domain.tld
     ports:
       - 3000:3000
     networks:
-      - app-network
+      - url-shortener
     restart: unless-stopped
     depends_on:
       - server
@@ -37,20 +50,21 @@ services:
   web-server:
     container_name: web-server
     image: nginx
+    ports:
+      - 80:80
+      - 443:443
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ./fullchain.pem:/etc/nginx/fullchain.pem
       - ./privkey.pem:/etc/nginx/privkey.pem
-    ports:
-      - 80:80
-      - 443:443
     networks:
-      - app-network
+      - url-shortener
     restart: unless-stopped
     depends_on:
+      - api-spec
       - server
       - client
 
 networks:
-  app-network:
-    name: app-network
+  url-shortener:
+    name: url-shortener

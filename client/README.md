@@ -13,43 +13,37 @@ For example, you can see [`.env.example`](.env.example)
 ### Installing Depedencies
 
 ```bash
-yarn install
-# or
 npm install
 ```
 
 ### Compiles and hot-reloads for development
 
 ```bash
-yarn dev
-# or
 npm run dev
 ```
 
 ### Compiles and minifies for production
 
 ```bash
-yarn build
-# or
 npm run build
 ```
 
-## Dockerize The Application
+## Dockerize The Application (Development)
 
 1.  Build docker image
     ```bash
     docker build \
-    --build-arg API_ENDPOINT=http://localhost:5000/go \
-    -t url-client:1.0.1 .
+    --build-arg API_ENDPOINT="http://localhost:5000/api/v1/go" \
+    -t url-client:1.0 .
     ```
 2.  Run docker image
     ```bash
     docker run -d --name url-client \
     -p 3000:3000 \
-    url-client:1.0.1
+    url-client:1.0
     ```
 
-## Learn More
+## Useful Links
 
 To learn more about this project, take a look at the following resources:
 

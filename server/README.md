@@ -4,7 +4,7 @@ This is server-side application part of URL Shortener. Built using Golang, Fiber
 
 ## API Spec
 
-Read more at [API_SPEC.md](./API_SPEC.md)
+Read more at [api-spec.yaml](./api-spec.yaml)
 
 ## Project Setup
 
@@ -16,10 +16,7 @@ Read more at [API_SPEC.md](./API_SPEC.md)
 - MONGO_MAX_CONN_IDLE
 - MONGO_DATABASE
 - URL_COLLECTION
-- USER_COLLECTION
-- JWT_SECRET
-- JWT_LIFE
-- STAGE
+- DOMAIN
 
 For example, you can see [`.env.example`](.env.example)
 
@@ -41,30 +38,27 @@ go run main.go
 go build main.go
 ```
 
-## Dockerize The Application
+## Dockerize The Application (Development)
 
 1.  Build docker image
     ```bash
-    docker build -t url-server:1.0.1 .
+    docker build -t url-server:1.0 .
     ```
 2.  Run docker image
     ```bash
     docker run -d --name url-server \
     -p 5000:5000 \
-    -e MONGO_URI=mongodb://localhost:27017 \
-    -e MONGO_MIN_POOL=10 \
-    -e MONGO_MAX_POOL=100 \
-    -e MONGO_MAX_CONN_IDLE=60 \
-    -e MONGO_DATABASE=urlShortener \
-    -e URL_COLLECTION=urls \
-    -e USER_COLLECTION=users \
-    -e JWT_SECRET=SECRET \
-    -e JWT_LIFE=6 \
-    -e STAGE=DEVELOPMENT \
-    url-server:1.0.1
+    -e MONGO_URI="mongodb://username:password@host:port" \
+    -e MONGO_MIN_POOL="10" \
+    -e MONGO_MAX_POOL="100" \
+    -e MONGO_MAX_CONN_IDLE="60" \
+    -e MONGO_DATABASE="urlShortener" \
+    -e URL_COLLECTION="urls" \
+    -e DOMAIN="http://localhost:5000" \
+    url-server:1.0
     ```
 
-## Learn More
+## Useful Links
 
 To learn more about this project, take a look at the following resources:
 
