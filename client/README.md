@@ -7,6 +7,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 ### Environment Variables
 
 - NEXT_PUBLIC_API_ENDPOINT
+- NEXT_PUBLIC_DOMAIN
 
 For example, you can see [`.env.example`](.env.example)
 
@@ -34,6 +35,7 @@ npm run build
     ```bash
     docker build \
     --build-arg API_ENDPOINT="http://localhost:5000/api/v1/go" \
+    --build-arg DOMAIN="http://localhost:5000" \
     -t url-client:1.0 .
     ```
 2.  Run docker image
