@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   api-spec:
     container_name: api-spec
@@ -12,6 +14,22 @@ services:
       - url-shortener
     restart: unless-stopped
 
+  database:
+    container_name: database
+    image: mongo:5.0.4
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    volumes:
+      - mongodb:/data/db
+    networks:
+      - url-shortener
+    restart: unless-stopped
+    depends_on:
+      - api-spec
+
   server:
     container_name: server
     build:
@@ -19,7 +37,7 @@ services:
     ports:
       - 5000:5000
     environment:
-      - MONGO_URI=mongodb://username:password@host:port
+      - MONGO_URI=mongodb://root:password@database:27017
       - MONGO_MIN_POOL=10
       - MONGO_MAX_POOL=100
       - MONGO_MAX_CONN_IDLE=60
@@ -31,6 +49,7 @@ services:
     restart: unless-stopped
     depends_on:
       - api-spec
+      - database
 
   client:
     container_name: client
@@ -45,6 +64,8 @@ services:
       - url-shortener
     restart: unless-stopped
     depends_on:
+      - api-spec
+      - database
       - server
 
   web-server:
@@ -62,8 +83,12 @@ services:
     restart: unless-stopped
     depends_on:
       - api-spec
+      - database
       - server
       - client
+
+volumes:
+  mongodb:
 
 networks:
   url-shortener:
